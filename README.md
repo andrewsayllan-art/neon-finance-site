@@ -78,6 +78,7 @@ Se a primeira aba não se chamar `Lançamentos`, ela é detectada automaticament
 - **Tela de acesso**: bloqueio local com usuário e senha antes do painel, com troca de senha, e **Entrar com Google** na mesma tela.
 - **Visão geral**: receita, despesa, investimento, saldo e "saúde financeira" (0–100), com médias e destaques do período.
 - **Filtros**: por mês e por ano (cabeçalho do painel).
+- **Temas**: botão no cabeçalho com Neon (padrão), Claro e Escuro — a escolha fica salva no navegador.
 - **Evolução mensal**: receita × despesa em eixos independentes + saldo em barras.
 - **Comparativo anual**: ano atual × ano anterior, mês a mês, com seletor de métrica (Receita, Despesa, Saldo ou ambos). Usa o ano filtrado, ou o último ano com dados.
 - **Análises**: ranking por grupo e categoria, donut por grupo, despesas por forma de pagamento, canais de receita.
