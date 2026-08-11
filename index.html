@@ -200,6 +200,10 @@
   .saved-load.active{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 12px rgba(37,244,255,0.15);}
   .saved-del{background:transparent;border:1px solid transparent;color:var(--faint);font-size:15px;line-height:1;padding:6px 8px;border-radius:8px;cursor:pointer;transition:.15s;}
   .saved-del:hover{color:var(--red);border-color:var(--border);}
+  .saved-ren{background:transparent;border:1px solid transparent;color:var(--faint);font-size:13px;line-height:1;padding:7px 8px;border-radius:8px;cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:center;}
+  .saved-ren:hover{color:var(--amber);border-color:var(--border);}
+  .saved-rename-input{flex:1;min-width:0;background:var(--surface);border:1px solid var(--cyan);color:var(--text);font-family:var(--mono);font-size:11px;padding:7px 11px;border-radius:9px;}
+  .saved-rename-input:focus{outline:none;box-shadow:0 0 0 1px rgba(37,244,255,0.4),0 0 16px rgba(37,244,255,0.2);}
   .auth-hint{margin-top:12px;font-size:11.5px;color:var(--faint);line-height:1.5;}
   .auth-hint b{color:var(--dim);}
 
@@ -941,11 +945,15 @@ function getLastSheet(){ try{ return JSON.parse(localStorage.getItem('neonLast_'
 function saveSheetDb(){
   try{
     if(!app.sheetId) return;
+    var prev = getSheets().find(function(o){ return o.id === app.sheetId; });
     var arr = getSheets().filter(function(o){ return o.id !== app.sheetId; });
-    arr.unshift({ id:app.sheetId, link:app.sheetName||app.sheetId, at:Date.now() });
+    var entry = { id:app.sheetId, link:app.sheetName||app.sheetId, at:Date.now() };
+    if(prev && prev.name) entry.name = prev.name;
+    arr.unshift(entry);
     if(arr.length > 8) arr.length = 8;
     localStorage.setItem('neonSheets_'+userKey(), JSON.stringify(arr));
-    localStorage.setItem('neonLast_'+userKey(), JSON.stringify({ id:app.sheetId, link:app.sheetName||app.sheetId }));
+    var last = getLastSheet();
+    localStorage.setItem('neonLast_'+userKey(), JSON.stringify({ id:app.sheetId, link:app.sheetName||app.sheetId, name:entry.name || (last ? last.name : undefined) }));
   }catch(e){}
 }
 function removeSheet(id){
@@ -953,6 +961,16 @@ function removeSheet(id){
     var arr = getSheets().filter(function(o){ return o.id !== id; });
     localStorage.setItem('neonSheets_'+userKey(), JSON.stringify(arr));
     if(getLastSheet() && getLastSheet().id === id) localStorage.removeItem('neonLast_'+userKey());
+  }catch(e){}
+}
+function renameSheet(id, name){
+  try{
+    var arr = getSheets().map(function(o){ return o.id === id ? Object.assign({}, o, {name:name}) : o; });
+    localStorage.setItem('neonSheets_'+userKey(), JSON.stringify(arr));
+    var last = getLastSheet();
+    if(last && last.id === id){
+      localStorage.setItem('neonLast_'+userKey(), JSON.stringify(Object.assign({}, last, {name:name})));
+    }
   }catch(e){}
 }
 
@@ -1206,7 +1224,13 @@ function initFilters(){
   var selAno = document.getElementById('selAno');
   var cur = selAno.value;
   selAno.innerHTML = '<option value="all">Todos os anos</option>' + years.map(function(y){ return '<option value="'+y+'">'+y+'</option>'; }).join('');
-  if(cur && years.indexOf(cur) !== -1) selAno.value = cur;
+  if(cur && years.indexOf(cur) !== -1){
+    selAno.value = cur;
+  } else if(!cur){
+    var curYear = String(new Date().getFullYear());
+    selAno.value = years.indexOf(curYear) !== -1 ? curYear : (years.length ? years[years.length-1] : 'all');
+  }
+  state.ano = selAno.value;
 
   var selMes = document.getElementById('selMes');
   selMes.innerHTML = '<option value="all">Todos os meses</option>' + MESES_FULL.map(function(m,i){ return '<option value="'+String(i+1).padStart(2,'0')+'">'+m+'</option>'; }).join('');
@@ -1932,8 +1956,10 @@ function renderSavedSheets(){
   var wrap = document.getElementById('savedSheets');
   var arr = getSheets();
   wrap.innerHTML = arr.length ? arr.map(function(o){
+    var label = o.name ? esc(o.name) : esc(shortId(o.id));
     return '<div class="saved-row">' +
-      '<button class="saved-load' + (app.sheetId === o.id ? ' active' : '') + '" data-id="' + esc(o.id) + '" data-link="' + esc(o.link) + '">' + esc(shortId(o.id)) + '</button>' +
+      '<button class="saved-load' + (app.sheetId === o.id ? ' active' : '') + '" data-id="' + esc(o.id) + '" data-link="' + esc(o.link) + '" title="' + esc(o.link || o.id) + '">' + label + '</button>' +
+      '<button class="saved-ren" data-id="' + esc(o.id) + '" title="Renomear"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg></button>' +
       '<button class="saved-del" data-id="' + esc(o.id) + '" title="remover">×</button>' +
     '</div>';
   }).join('') : '<div class="empty-note">Nenhuma planilha salva ainda.</div>';
@@ -1945,6 +1971,34 @@ function renderSavedSheets(){
       saveSheetDb();
       renderSavedSheets();
       refresh();
+    });
+  });
+  Array.prototype.forEach.call(wrap.querySelectorAll('.saved-ren'), function(b){
+    b.addEventListener('click', function(){
+      var id = b.dataset.id;
+      var row = b.parentNode;
+      var loadBtn = row.querySelector('.saved-load');
+      var input = document.createElement('input');
+      input.className = 'saved-rename-input';
+      input.value = loadBtn ? loadBtn.textContent : '';
+      input.maxLength = 40;
+      input.spellcheck = false;
+      var done = false;
+      var finish = function(save){
+        if(done) return;
+        done = true;
+        var name = input.value.trim();
+        if(save && name) renameSheet(id, name);
+        renderSavedSheets();
+      };
+      input.addEventListener('keydown', function(ev){
+        if(ev.key === 'Enter'){ ev.preventDefault(); finish(true); }
+        else if(ev.key === 'Escape'){ finish(false); }
+      });
+      input.addEventListener('blur', function(){ finish(true); });
+      loadBtn.replaceWith(input);
+      input.focus();
+      input.select();
     });
   });
   Array.prototype.forEach.call(wrap.querySelectorAll('.saved-del'), function(b){
@@ -1968,7 +2022,7 @@ function pickLastSheet(){
       try{
         var o = JSON.parse(last);
         var arr = getSheets().filter(function(x){ return x.id !== o.id; });
-        arr.unshift({ id:o.id, link:o.link||o.id, at:Date.now() });
+        arr.unshift({ id:o.id, link:o.link||o.id, name:o.name||undefined, at:Date.now() });
         localStorage.setItem('neonSheets_'+k, JSON.stringify(arr));
         localStorage.setItem('neonLast_'+k, last);
       }catch(e){}
