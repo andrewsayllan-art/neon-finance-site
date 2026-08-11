@@ -3,7 +3,7 @@
    - App shell (index.html, manifest, ícones) e bibliotecas CDN (Chart.js): cache-first.
    - APIs do Google (Sheets, GIS): somente rede (dados sempre frescos; o app já tem cache próprio).
 */
-var CACHE = 'neon-finance-v1';
+var CACHE = 'neon-finance-v2';
 var PRECACHE = [
   './',
   './index.html',
@@ -44,6 +44,19 @@ self.addEventListener('fetch', function(ev){
 
   if(isGoogleApi(url)){
     ev.respondWith(fetch(ev.request));
+    return;
+  }
+
+  if(ev.request.mode === 'navigate'){
+    ev.respondWith(
+      fetch(ev.request).then(function(resp){
+        if(resp && resp.status === 200){
+          var copy = resp.clone();
+          caches.open(CACHE).then(function(cache){ cache.put('./index.html', copy); });
+        }
+        return resp;
+      }).catch(function(){ return caches.match('./index.html'); })
+    );
     return;
   }
 
