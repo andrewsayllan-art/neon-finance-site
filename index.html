@@ -1176,8 +1176,16 @@ function handleLogin(fromLock){
       scope: APP_CONFIG.SCOPE,
       prompt: 'consent',
       error_callback: function(e){
-        var msg = e && (e.error_description || e.error) || 'desconhecido';
-        fail('Login não concluído: ' + msg + '. O app OAuth precisa estar publicado ou seu e-mail adicionado como usuário de teste.');
+        var raw = e || {};
+        var type = raw.type || raw.error || 'desconhecido';
+        var msg;
+        if(type === 'popup_closed') msg = 'A janela do Google foi fechada antes de concluir. Tente novamente.';
+        else if(type === 'popup_failed_to_open') msg = 'O navegador bloqueou o popup do Google. Permita popups para este site e tente de novo.';
+        else if(type === 'access_denied') msg = 'Você recusou o acesso. Autorize o login para ler planilhas privadas.';
+        else if(/origin|redirect_uri|client/i.test(String(raw.error_description || raw.message || ''))) msg = 'Configuração do Google Cloud incorreta: confira a ORIGEM autorizada (https://andrewsayllan-art.github.io) e o ID do cliente.';
+        else if(/consent|userinfo|disabled/i.test(String(raw.error_description || raw.message || ''))) msg = 'O app OAuth precisa estar publicado ou seu e-mail adicionado como usuário de teste na tela de consentimento.';
+        else msg = 'Erro do Google: ' + String(raw.error_description || raw.message || type) + '.';
+        fail('Login não concluído: ' + msg);
       },
       callback: function(resp){
         app.token = resp.access_token;
