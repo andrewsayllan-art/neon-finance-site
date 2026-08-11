@@ -39,6 +39,23 @@ O service worker pré-carrega a página, o manifest e os ícones — o app abre 
 - É um **bloqueio de tela**, não uma autenticação real: quem tiver acesso ao arquivo/página consegue ver o código. Serve para impedir que outra pessoa do mesmo dispositivo abra o painel.
 - Botão **Trancar** (no cabeçalho) bloqueia o painel a qualquer momento.
 - Em **"Esqueci a senha"**: apague os dados do site no navegador (Privacidade → Apagar dados do site) e recarregue para redefinir o acesso.
+- A tela de acesso também tem o botão **Entrar com Google** (para planilhas privadas) — ele destrava o painel e conecta sua conta. O botão não aparece mais no dashboard.
+
+### Login com Google (planilhas privadas)
+
+Para ler **planilhas privadas**, o painel usa a sua conta Google via OAuth. É preciso criar um **ID do cliente OAuth** no Google Cloud e colá-lo no `index.html`:
+
+1. Acesse **console.cloud.google.com** e crie/selecione um projeto.
+2. Menu ☰ → **APIs e serviços → Tela de consentimento OAuth**. Escolha **Externo**, preencha o nome do app e adicione seu e-mail em *Usuários de teste* → **Salvar**.
+3. Menu ☰ → **APIs e serviços → Credenciais → + Criar credenciais → ID do cliente OAuth**.
+   - Tipo: **Aplicativo da Web**.
+   - Em **Origens de JavaScript autorizadas**, adicione a URL base do seu site (ex.: `https://SEU_USUARIO.github.io`).
+   - Em **URIs de redirecionamento autorizados**, adicione a mesma URL base.
+   - Clique em **Criar** e copie o **ID do cliente** (formato `xxxx.apps.googleusercontent.com`).
+4. No arquivo `index.html`, no topo do script, substitua o valor de `APP_CONFIG.CLIENT_ID` (o placeholder `'SEU_CLIENT_ID.apps.googleusercontent.com'`) pelo ID copiado.
+5. Suba a alteração (commit + push) e pronto.
+
+> Enquanto o app estiver no status **"Testando"**, o login só funciona para os e-mails adicionados como *usuários de teste* — suficiente para uso pessoal. Para liberar a qualquer pessoa, publique o app na tela de consentimento.
 
 ## Formato da planilha
 
@@ -58,7 +75,7 @@ Se a primeira aba não se chamar `Lançamentos`, ela é detectada automaticament
 
 ## Funcionalidades
 
-- **Tela de acesso**: bloqueio local com usuário e senha antes do painel, com troca de senha.
+- **Tela de acesso**: bloqueio local com usuário e senha antes do painel, com troca de senha, e **Entrar com Google** na mesma tela.
 - **Visão geral**: receita, despesa, investimento, saldo e "saúde financeira" (0–100), com médias e destaques do período.
 - **Filtros**: por mês e por ano (cabeçalho do painel).
 - **Evolução mensal**: receita × despesa em eixos independentes + saldo em barras.
