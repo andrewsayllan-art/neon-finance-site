@@ -1021,27 +1021,102 @@
 
   <section class="page" data-page="receitas">
   <section class="panels">
-    <div class="section-label">Receitas e canais</div>
+    <div class="section-label">Indicadores de receita</div>
+
+    <section class="kpi-grid" style="margin-bottom:18px">
+      <div class="kpi-card" style="--accent:var(--cyan);--glow:rgba(37,244,255,0.16);--accent-soft:rgba(37,244,255,0.1)">
+        <div class="kpi-top">
+          <div><div class="kpi-label">Receita Total</div></div>
+          <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></div>
+        </div>
+        <div class="kpi-value pos" id="recTotal">—</div>
+        <div class="kpi-foot" id="recTotalFoot"></div>
+      </div>
+
+      <div class="kpi-card" style="--accent:var(--green);--glow:rgba(61,255,165,0.16);--accent-soft:rgba(61,255,165,0.1)">
+        <div class="kpi-top">
+          <div><div class="kpi-label">Média mensal</div></div>
+          <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M12 3v18M3 12h18"/></svg></div>
+        </div>
+        <div class="kpi-value pos" id="recMedia">—</div>
+        <div class="kpi-foot" id="recMediaFoot"></div>
+      </div>
+
+      <div class="kpi-card" style="--accent:var(--purple);--glow:rgba(157,92,255,0.18);--accent-soft:rgba(157,92,255,0.1)">
+        <div class="kpi-top">
+          <div><div class="kpi-label">Maior entrada</div></div>
+          <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M7 7h10v10M7 17L21 3"/></svg></div>
+        </div>
+        <div class="kpi-value pos" id="recTopValue">—</div>
+        <div class="kpi-foot" id="recTopValueFoot"></div>
+      </div>
+
+      <div class="kpi-card" style="--accent:var(--amber);--glow:rgba(255,184,77,0.16);--accent-soft:rgba(255,184,77,0.1)">
+        <div class="kpi-top">
+          <div><div class="kpi-label">Fontes de renda</div></div>
+          <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></div>
+        </div>
+        <div class="kpi-value" id="recFontes">—</div>
+        <div class="kpi-foot" id="recFontesFoot"></div>
+      </div>
+    </section>
 
     <div class="row cols-2">
       <div class="panel">
         <div class="panel-head">
           <div>
-            <div class="panel-title">Receita por Canal de Venda</div>
-            <div class="panel-sub">Adaptado: a base não possui canal de venda — mostramos as fontes de receita (Salário, Freelance, etc.)</div>
+            <div class="panel-title">Evolução mensal da receita</div>
+            <div class="panel-sub" id="recMensalSub">Receitas mês a mês no período filtrado</div>
           </div>
         </div>
-        <div class="chart-box"><canvas id="chartCanais"></canvas></div>
+        <div class="chart-box tall"><canvas id="chartRecMensal"></canvas></div>
       </div>
 
       <div class="panel">
         <div class="panel-head">
           <div>
-            <div class="panel-title">Receita por Região</div>
-            <div class="panel-sub">Adaptado: sem dado geográfico — mostramos as despesas por forma de pagamento (por onde o dinheiro sai)</div>
+            <div class="panel-title">Composição por fonte</div>
+            <div class="panel-sub" id="recDonutSub">Participação de cada fonte na receita total</div>
           </div>
         </div>
-        <div class="chart-box"><canvas id="chartForma"></canvas></div>
+        <div class="chart-box tall donut-box">
+          <div class="donut-canvas"><canvas id="chartRecDonut"></canvas></div>
+        </div>
+        <div class="gauge-caption" id="recDonutStatus"></div>
+      </div>
+    </div>
+
+    <div class="row cols-2">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">Receita por fonte</div>
+            <div class="panel-sub" id="recFonteSub">Total por fonte de receita (Salário, Freelance etc.)</div>
+          </div>
+        </div>
+        <div class="chart-box tall"><canvas id="chartCanais"></canvas></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">Maiores entradas do período</div>
+            <div class="panel-sub" id="recTopSub">Top 10 lançamentos de receita por valor</div>
+          </div>
+        </div>
+        <div class="tx-wrap" style="max-height:none">
+          <table class="tx-table">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Descrição</th>
+                <th>Categoria</th>
+                <th class="num">Valor</th>
+              </tr>
+            </thead>
+            <tbody id="recTopBody"></tbody>
+          </table>
+        </div>
       </div>
     </div>
   </section>
@@ -2222,51 +2297,7 @@ function render(){
     d2.update();
   }
 
-  var canMap = groupSum(main.filter(function(r){ return r.tipo === 'Receita'; }), function(r){ return r.desc || 'Sem descrição'; });
-  var canSorted = sortedEntries(canMap);
-  var cColors = canSorted.map(function(_,i){ return i === 0 ? C.cyan : hexA(C.cyan, Math.max(0.45, 0.9 - i*0.09)); });
-  if(!charts.canais){
-    charts.canais = new Chart(document.getElementById('chartCanais'), {
-      type:'bar',
-      data:{ labels:canSorted.map(function(e){ return e[0]; }), datasets:[{ data:canSorted.map(function(e){ return e[1]; }), backgroundColor:cColors, borderRadius:7, barThickness:40, neonGlow:true, glowColor:C.cyan }] },
-      options:{
-        responsive:true, maintainAspectRatio:false,
-        plugins:{ legend:{display:false},
-          tooltip:{ backgroundColor:CHART.bg, borderColor:'rgba(37,244,255,0.35)', borderWidth:1, padding:10, callbacks:{ label:function(ctx){ return ' ' + fmtBRLf(ctx.parsed.y); } } } },
-        scales:{ x:{ grid:{display:false}, ticks:{font:{size:10.5}} }, y:{ grid:{color:CHART.grid}, ticks:{callback:function(v){ return fmtBRL(v); }, font:{size:10}} } }
-      }
-    });
-  } else {
-    var c3 = charts.canais;
-    c3.data.labels = canSorted.map(function(e){ return e[0]; });
-    c3.data.datasets[0].data = canSorted.map(function(e){ return e[1]; });
-    c3.data.datasets[0].backgroundColor = cColors;
-    c3.update();
-  }
-
-  var formaMap = groupSum(main.filter(function(r){ return isDespesa(r.tipo); }), function(r){ return r.forma || 'Sem forma'; });
-  var formaSorted = sortedEntries(formaMap);
-  var fColors = formaSorted.map(function(_,i){ return palette[(i+1) % palette.length]; });
-  if(!charts.forma){
-    charts.forma = new Chart(document.getElementById('chartForma'), {
-      type:'bar',
-      data:{ labels:formaSorted.map(function(e){ return e[0]; }), datasets:[{ data:formaSorted.map(function(e){ return e[1]; }), backgroundColor:fColors, borderRadius:7, barThickness:34, neonGlow:true }] },
-      options:{
-        indexAxis:'y', responsive:true, maintainAspectRatio:false,
-        plugins:{ legend:{display:false},
-          tooltip:{ backgroundColor:CHART.bg, borderColor:'rgba(157,92,255,0.35)', borderWidth:1, padding:10,
-            callbacks:{ label:function(ctx){ return ' ' + fmtBRLf(ctx.parsed.x) + (totalDespesa ? ' (' + (ctx.parsed.x/totalDespesa*100).toFixed(1) + '%)' : ''); } } } },
-        scales:{ x:{ grid:{color:CHART.grid}, ticks:{callback:function(v){ return fmtBRL(v); }, font:{size:10}} }, y:{ grid:{display:false}, ticks:{font:{size:11}} } }
-      }
-    });
-  } else {
-    var c4 = charts.forma;
-    c4.data.labels = formaSorted.map(function(e){ return e[0]; });
-    c4.data.datasets[0].data = formaSorted.map(function(e){ return e[1]; });
-    c4.data.datasets[0].backgroundColor = fColors;
-    c4.update();
-  }
-
+  renderReceitas(main, {totalReceita:totalReceita, totalDespesa:totalDespesa, nMeses:nMeses});
   renderMetas(main, {totalReceita:totalReceita, totalDespesa:totalDespesa, totalInvest:totalInvest, saldo:saldo, taxa:taxa, nMeses:nMeses, despCatSorted:despCatSorted});
   renderProjecoes(main, {totalReceita:totalReceita, totalDespesa:totalDespesa, totalInvest:totalInvest, nMeses:nMeses});
   updatePlanChart();
@@ -2378,7 +2409,10 @@ function renderEmpty(){
   document.getElementById('leituraAlertas').innerHTML = '';
   document.getElementById('leituraDicasSub').textContent = '';
   document.getElementById('leituraDicas').innerHTML = '';
-  ['monthly','despCat','gauge','donut','canais','forma','metaGauge','comparativo','proj','planComp','planInv'].forEach(function(key){
+  ['recTotal','recMedia','recTopValue','recFontes'].forEach(function(id){ document.getElementById(id).textContent = '—'; });
+  ['recTotalFoot','recMediaFoot','recTopValueFoot','recFontesFoot','recMensalSub','recDonutSub','recDonutStatus','recFonteSub','recTopSub'].forEach(function(id){ document.getElementById(id).textContent = ''; });
+  document.getElementById('recTopBody').innerHTML = '<tr><td colspan="4" class="tx-cat" style="text-align:center;padding:22px">Nenhuma receita no período selecionado.</td></tr>';
+  ['monthly','despCat','gauge','donut','canais','recMensal','recDonut','metaGauge','comparativo','proj','planComp','planInv'].forEach(function(key){
     var c = charts[key];
     if(!c) return;
     c.data.labels = [];
@@ -2395,6 +2429,162 @@ function renderEmpty(){
   document.getElementById('txSummary').innerHTML = '';
   document.getElementById('txSub').textContent = 'Detalhe dos lançamentos conforme os filtros de mês e ano';
   document.getElementById('txToggle').style.display = 'none';
+}
+
+/* ================= RECEITAS ================= */
+function renderReceitas(main, ctx){
+  var recs = main.filter(function(r){ return r.tipo === 'Receita'; });
+  var totalReceita = ctx.totalReceita || 0;
+  var nMeses = Math.max(ctx.nMeses || 1, 1);
+  var media = totalReceita/nMeses;
+
+  var maior = 0, maiorDesc = '';
+  recs.forEach(function(r){ if(r.v > maior){ maior = r.v; maiorDesc = r.desc || '—'; } });
+
+  var fontMap = groupSum(recs, function(r){ return r.desc || 'Sem descrição'; });
+  var fontSorted = sortedEntries(fontMap);
+  var topFonte = fontSorted[0] || null;
+  var topPct = topFonte && totalReceita ? topFonte[1]/totalReceita*100 : 0;
+
+  document.getElementById('recTotal').textContent = fmtBRL(totalReceita);
+  document.getElementById('recTotalFoot').innerHTML = '<span class="tag cyan">entradas</span> ' + recs.length + ' lançamento(s) · ' + nMeses + ' mês(es)';
+
+  document.getElementById('recMedia').textContent = fmtBRL(media);
+  document.getElementById('recMediaFoot').innerHTML = 'média por mês no período filtrado';
+
+  document.getElementById('recTopValue').textContent = fmtBRL(maior);
+  document.getElementById('recTopValueFoot').innerHTML = maiorDesc ? 'maior entrada: ' + esc(maiorDesc) : '';
+
+  document.getElementById('recFontes').textContent = fontSorted.length;
+  document.getElementById('recFontesFoot').innerHTML = topFonte
+    ? 'principal: ' + esc(topFonte[0]) + ' · ' + fmtPct(topPct)
+    : 'sem receitas no período';
+
+  /* evolução mensal */
+  var monthMap = new Map();
+  recs.forEach(function(r){
+    if(!r.d) return;
+    var k = r.d.slice(0,7);
+    monthMap.set(k, (monthMap.get(k)||0) + r.v);
+  });
+  var monthKeys = Array.from(monthMap.keys()).sort();
+  var mLabels = monthKeys.map(function(k){ return MESES_ABREV[parseInt(k.slice(5,7),10)-1] + '/' + k.slice(2,4); });
+  var mValues = monthKeys.map(function(k){ return Math.round(monthMap.get(k)*100)/100; });
+  var melhorMes = 0, melhorVal = 0;
+  monthKeys.forEach(function(k,i){ if(mValues[i] > melhorVal){ melhorVal = mValues[i]; melhorMes = i; } });
+  document.getElementById('recMensalSub').textContent = (mLabels.length ? 'Melhor mês: ' + mLabels[melhorMes] + ' com ' + fmtBRLf(melhorVal) + ' · ' : '') + 'receitas mês a mês';
+
+  var mColor = mValues.map(function(v,i){ return i === melhorMes ? C.cyan : hexA(C.cyan, 0.45); });
+  if(!charts.recMensal){
+    charts.recMensal = new Chart(document.getElementById('chartRecMensal'), {
+      type:'bar',
+      data:{ labels:mLabels, datasets:[{ data:mValues, backgroundColor:mColor, borderRadius:6, barThickness:24, neonGlow:true, glowColor:C.cyan }] },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{display:false},
+          tooltip:{ backgroundColor:CHART.bg, borderColor:'rgba(37,244,255,0.35)', borderWidth:1, padding:10, callbacks:{ label:function(ctx){ return ' ' + fmtBRLf(ctx.parsed.y); } } } },
+        scales:{
+          x:{ grid:{display:false}, ticks:{font:{size:10.5}} },
+          y:{ grid:{color:CHART.grid}, ticks:{callback:function(v){ return fmtBRL(v); }, font:{size:10}} }
+        }
+      }
+    });
+  } else {
+    var rm = charts.recMensal;
+    rm.data.labels = mLabels;
+    rm.data.datasets[0].data = mValues;
+    rm.data.datasets[0].backgroundColor = mColor;
+    rm.update();
+  }
+
+  /* composição (donut) por fonte */
+  var donutLabels = fontSorted.map(function(e){ return e[0]; });
+  var donutValues = fontSorted.map(function(e){ return e[1]; });
+  var dColors = donutLabels.map(function(_,i){ return palette[i % palette.length]; });
+  if(!charts.recDonut){
+    charts.recDonut = new Chart(document.getElementById('chartRecDonut'), {
+      type:'doughnut',
+      data:{ labels:donutLabels, datasets:[{ data:donutValues, backgroundColor:dColors, borderColor:CHART.bg, borderWidth:3, hoverOffset:6 }] },
+      options:{
+        responsive:true, maintainAspectRatio:false, cutout:'64%',
+        plugins:{ legend:{ position:'bottom',
+            labels:{ color:C.dim, font:{size:11, weight:600}, boxWidth:9, boxHeight:9, padding:11, usePointStyle:true },
+            generateLabels:function(chart){
+              var data = chart.data;
+              return (data.labels||[]).map(function(label,i){
+                var val = data.datasets[0].data[i]||0;
+                var pct = totalReceita ? (val/totalReceita*100).toFixed(1) : 0;
+                return { text: label + ' — ' + fmtBRLf(val) + ' (' + pct + '%)',
+                  fillStyle: data.datasets[0].backgroundColor[i], strokeStyle: data.datasets[0].backgroundColor[i],
+                  lineWidth: 0, hidden: false, index: i };
+              });
+            } },
+          tooltip:{ backgroundColor:CHART.bg, borderColor:'rgba(37,244,255,0.35)', borderWidth:1, padding:10, callbacks:{ label:function(ctx){ return ' ' + ctx.label + ': ' + fmtBRLf(ctx.parsed) + ' (' + (totalReceita ? (ctx.parsed/totalReceita*100).toFixed(1) : 0) + '%)'; } } } }
+      }
+    });
+  } else {
+    var rd = charts.recDonut;
+    rd.data.labels = donutLabels;
+    rd.data.datasets[0].data = donutValues;
+    rd.data.datasets[0].backgroundColor = dColors;
+    rd.update();
+  }
+
+  var divTxt;
+  if(fontSorted.length <= 1){
+    divTxt = 'Toda a receita vem de uma única fonte. Diversificar é o caminho para reduzir o risco — avalie uma renda extra ou profissionalização do trabalho autônomo.';
+  } else if(topPct >= 70){
+    divTxt = '<b>' + esc(topFonte[0]) + '</b> concentra ' + fmtPct(topPct) + ' da receita. Dependência alta: se essa fonte cair, suas finanças sentem na hora.';
+  } else if(topPct >= 50){
+    divTxt = '<b>' + esc(topFonte[0]) + '</b> responde por ' + fmtPct(topPct) + '. Boa base, mas ainda vale fortalecer as demais fontes.';
+  } else {
+    divTxt = 'Receita bem distribuída entre ' + fontSorted.length + ' fontes. Manter essa diversificação protege seu orçamento.';
+  }
+  document.getElementById('recDonutStatus').innerHTML = divTxt;
+
+  /* barra por fonte */
+  var cColors = fontSorted.map(function(_,i){ return i === 0 ? C.cyan : hexA(C.cyan, Math.max(0.45, 0.9 - i*0.09)); });
+  document.getElementById('recFonteSub').textContent = fontSorted.length
+    ? fontSorted.slice(0,4).map(function(e,i){
+        var pct = totalReceita ? fmtPct(e[1]/totalReceita*100) : '';
+        return esc(e[0]) + ' ' + fmtBRLf(e[1]) + (pct ? ' · ' + pct : '');
+      }).join('  |  ')
+    : 'Sem receitas no período';
+  if(!charts.canais){
+    charts.canais = new Chart(document.getElementById('chartCanais'), {
+      type:'bar',
+      data:{ labels:fontSorted.map(function(e){ return e[0]; }), datasets:[{ data:fontSorted.map(function(e){ return e[1]; }), backgroundColor:cColors, borderRadius:7, barThickness:40, neonGlow:true, glowColor:C.cyan }] },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{display:false},
+          tooltip:{ backgroundColor:CHART.bg, borderColor:'rgba(37,244,255,0.35)', borderWidth:1, padding:10, callbacks:{ label:function(ctx){ return ' ' + fmtBRLf(ctx.parsed.y); } } } },
+        scales:{ x:{ grid:{display:false}, ticks:{font:{size:10.5}} }, y:{ grid:{color:CHART.grid}, ticks:{callback:function(v){ return fmtBRL(v); }, font:{size:10}} } }
+      }
+    });
+  } else {
+    var c3 = charts.canais;
+    c3.data.labels = fontSorted.map(function(e){ return e[0]; });
+    c3.data.datasets[0].data = fontSorted.map(function(e){ return e[1]; });
+    c3.data.datasets[0].backgroundColor = cColors;
+    c3.update();
+  }
+
+  /* top entradas */
+  var topRecs = recs.slice().sort(function(a,b){ return b.v - a.v; }).slice(0,10);
+  var totalTop = topRecs.reduce(function(s,r){ return s + r.v; }, 0);
+  document.getElementById('recTopSub').textContent = topRecs.length
+    ? 'Top ' + topRecs.length + ' lançamentos · ' + fmtBRLf(totalTop) + ' em ' + fmtPct(totalReceita ? totalTop/totalReceita*100 : 0) + ' da receita'
+    : 'Top 10 lançamentos de receita por valor';
+  document.getElementById('recTopBody').innerHTML = topRecs.length
+    ? topRecs.map(function(r){
+        return '<tr>' +
+          '<td class="tx-date">' + esc(fmtDate(r.d)) + '</td>' +
+          '<td class="tx-desc">' + esc(r.desc || '—') + '</td>' +
+          '<td class="tx-cat">' + esc(r.cat || '—') + '</td>' +
+          '<td class="num tx-val-rec">' + fmtBRLf(r.v) + '</td>' +
+        '</tr>';
+      }).join('')
+    : '<tr><td colspan="4" class="tx-cat" style="text-align:center;padding:22px">Nenhuma receita no período selecionado.</td></tr>';
 }
 
 function renderMetas(main, ctx){
