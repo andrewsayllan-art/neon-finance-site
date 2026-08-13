@@ -75,14 +75,17 @@ Se a primeira aba não se chamar `Lançamentos`, ela é detectada automaticament
 
 ## Funcionalidades
 
+- **Navegação por páginas**: painel lateral com 7 páginas (Dashboard, Receitas, Lançamentos, Gestão de Metas, Projeções, Planejamento Gastos e Importação), com opção de **ocultar** o painel (a escolha e a página ativa ficam salvas). No celular, vira um menu gaveta com fundo escurecido.
 - **Tela de acesso**: bloqueio local com usuário e senha antes do painel, com troca de senha, e **Entrar com Google** na mesma tela.
 - **Visão geral**: receita, despesa, investimento, saldo e "saúde financeira" (0–100), com médias e destaques do período.
 - **Filtros**: por mês e por ano (cabeçalho do painel).
-- **Temas**: botão no cabeçalho com Neon (padrão), Claro e Escuro — a escolha fica salva no navegador.
+- **Temas**: botão no cabeçalho com Neon (padrão), Claro e Neutro (verde/azul, sem efeito neon) — a escolha fica salva no navegador.
 - **Evolução mensal**: receita × despesa em eixos independentes + saldo em barras.
 - **Comparativo anual**: ano atual × ano anterior, mês a mês, com seletor de métrica (Receita, Despesa, Saldo ou ambos). Usa o ano filtrado, ou o último ano com dados.
 - **Análises**: ranking por grupo e categoria, donut por grupo, despesas por forma de pagamento, canais de receita.
 - **Metas**: poupança (%), aporte mensal e reserva de emergência, com medidor de progresso e barras de atingimento; metas por categoria de gasto.
+- **Projeções e simulações**: projeta o caixa (crescimento da receita/despesa, saldo inicial, horizonte) e os investimentos (juros compostos, aporte e taxa anual), com resumo em cards. Os parâmetros ficam salvos no navegador.
+- **Planejamento de gastos**: página para montar o **previsto** mensal (Jan–Dez) por categoria e subcategoria, com classificação Essencial/Não essencial, totais por mês, **saldo por categoria** e cards de **Total previsto (receita) × Gastos × Saldo total**. O primeiro gráfico compara **Total previsto** (amarelo) × **Gastos** (vermelho) com a linha azul do **saldo**; o segundo compara o **Planejado para investir** × **Valor realizado** nos lançamentos do ano. A importação lê a aba `Planejamento` da planilha e **separa os grupos** da coluna Categoria: só os **gastos** vão para a tabela; as linhas `Receita` e `Investimento` são guardadas à parte. Tudo fica salvo no navegador.
 - **Leituras (insights)**: cards automáticos com destaques do período (melhor/menor mês, categorias mais pesadas, folga de caixa, etc.).
 - **Cache local**: os dados ficam salvos no navegador; se a planilha não for alcançável, o painel usa a última cópia conhecida.
 - **Login opcional (Google)**: salva seu último vínculo (planilha + filtros) entre dispositivos, para planilhas privadas. Sem login, tudo continua funcionando para planilhas públicas.

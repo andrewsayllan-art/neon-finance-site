@@ -66,29 +66,62 @@
     --scrollbar:#C7CEDA;
     --head-glow:rgba(14,155,176,0.07);
   }
-  :root[data-theme="dark"]{
-    --bg:#0A0C11;
-    --bg-2:#10141C;
-    --surface:#141923;
-    --surface-2:#1B2130;
-    --border:rgba(148,163,255,0.12);
-    --cyan:#4FD8FF;
-    --green:#5BE9A9;
-    --magenta:#FF6BD6;
-    --purple:#B387FF;
-    --amber:#FFC76B;
-    --red:#FF6B85;
-    --text:#E9EEF9;
-    --dim:#9AA4B9;
-    --faint:#66708A;
-    --glow-1:rgba(79,216,255,0.06);
-    --glow-2:rgba(255,107,214,0.05);
-    --glow-3:rgba(179,135,255,0.05);
-    --grid-line:rgba(148,163,255,0.05);
-    --bar-bg:rgba(16,20,28,0.88);
-    --scrollbar:#232B3C;
-    --head-glow:rgba(79,216,255,0.05);
+  :root[data-theme="neutro"]{
+    --bg:#0B1220;
+    --bg-2:#101B2E;
+    --surface:#132038;
+    --surface-2:#1A2B47;
+    --border:rgba(147,197,253,0.14);
+    --cyan:#3B82F6;
+    --green:#34D399;
+    --magenta:#2DD4BF;
+    --purple:#818CF8;
+    --amber:#FBBF24;
+    --red:#FB7185;
+    --text:#F1F5F9;
+    --dim:#A6B4C9;
+    --faint:#6E8098;
+    --glow-1:rgba(59,130,246,0.16);
+    --glow-2:rgba(52,211,153,0.12);
+    --glow-3:rgba(129,140,248,0.10);
+    --grid-line:rgba(147,197,253,0.06);
+    --bar-bg:rgba(16,27,46,0.92);
+    --scrollbar:#243652;
+    --head-glow:rgba(59,130,246,0.10);
   }
+  :root[data-theme="neutro"] h1 .neon,
+  :root[data-theme="neutro"] h1 .neon2,
+  :root[data-theme="neutro"] .eyebrow,
+  :root[data-theme="neutro"] .side-logo .ln,
+  :root[data-theme="neutro"] .side-logo .lm,
+  :root[data-theme="neutro"] .plan-cat-total,
+  :root[data-theme="neutro"] .kpi-value.pos,
+  :root[data-theme="neutro"] .kpi-value.neg,
+  :root[data-theme="neutro"] .rank-row .num,
+  :root[data-theme="neutro"] .tx-val-rec,
+  :root[data-theme="neutro"] .tx-val-inv,
+  :root[data-theme="neutro"] .gauge-value{text-shadow:none;}
+  :root[data-theme="neutro"] .eyebrow .dot{box-shadow:none;}
+  :root[data-theme="neutro"] .side-btn.active,
+  :root[data-theme="neutro"] .side-btn.active svg,
+  :root[data-theme="neutro"] .side-reopen svg,
+  :root[data-theme="neutro"] .plan-btn:hover,
+  :root[data-theme="neutro"] .connect-btn:hover,
+  :root[data-theme="neutro"] .lock-btn:hover{box-shadow:none;filter:none;}
+  :root[data-theme="neutro"] .kpi-card:hover,
+  :root[data-theme="neutro"] .side-reopen:hover{box-shadow:0 14px 34px rgba(3,10,24,0.5);}
+  :root[data-theme="neutro"] .connect-card::before,
+  :root[data-theme="neutro"] .panel::before,
+  :root[data-theme="neutro"] .lock-card::before,
+  :root[data-theme="neutro"] .kpi-card::before{box-shadow:none;}
+  :root[data-theme="neutro"] .plan-cat-total,
+  :root[data-theme="neutro"] .side-btn.active svg{filter:none;}
+  :root[data-theme="neutro"] .health-bar i{box-shadow:none;}
+  :root[data-theme="neutro"] .lock-overlay{background:
+    radial-gradient(ellipse 700px 480px at 50% -10%, var(--glow-1), transparent 60%),
+    radial-gradient(ellipse 620px 460px at 12% 112%, var(--glow-3), transparent 60%),
+    radial-gradient(ellipse 560px 420px at 108% 108%, var(--glow-2), transparent 60%),
+    var(--bg);}
   *{margin:0;padding:0;box-sizing:border-box;}
   body{
     min-height:100vh;
@@ -114,6 +147,169 @@
   ::-webkit-scrollbar{width:9px;height:9px;}
   ::-webkit-scrollbar-track{background:var(--bg-2);}
   ::-webkit-scrollbar-thumb{background:var(--scrollbar);border-radius:10px;}
+
+  /* ============ LAYOUT / SIDEBAR ============ */
+  .app-body{display:flex;align-items:flex-start;position:relative;z-index:1;}
+  .app-main{flex:1;min-width:0;}
+  .page{display:none;}
+  .page.active{display:block;animation:pageIn .25s ease;}
+  @keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .filter-bar.hidden{display:none;}
+
+  .sidebar{
+    position:sticky;top:0;height:100vh;width:238px;flex-shrink:0;overflow:hidden;
+    display:flex;flex-direction:column;
+    background:linear-gradient(180deg, var(--surface), var(--bg-2));
+    border-right:1px solid var(--border);
+    transition:width .28s cubic-bezier(.22,1,.36,1);
+    z-index:40;
+  }
+  body.side-collapsed .sidebar{width:0;border-right:none;}
+  .side-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:16px 14px 12px;border-bottom:1px solid var(--border);}
+  .side-logo{font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:-0.02em;white-space:nowrap;}
+  .side-logo .ln{color:var(--cyan);text-shadow:0 0 14px rgba(37,244,255,0.5);}
+  .side-logo .lm{color:var(--magenta);text-shadow:0 0 14px rgba(255,46,196,0.45);}
+  .side-close{
+    display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;flex-shrink:0;
+    background:var(--surface-2);border:1px solid var(--border);color:var(--dim);border-radius:8px;cursor:pointer;transition:.15s;
+  }
+  .side-close:hover{color:var(--cyan);border-color:var(--cyan);}
+  .side-close svg{width:15px;height:15px;}
+  .side-nav{flex:1;overflow-y:auto;padding:14px 10px;display:flex;flex-direction:column;gap:4px;}
+  .side-btn{
+    display:flex;align-items:center;gap:11px;width:100%;text-align:left;
+    background:transparent;border:1px solid transparent;color:var(--dim);
+    font-family:var(--sans);font-size:13px;font-weight:600;
+    padding:11px 12px;border-radius:11px;cursor:pointer;transition:.15s;white-space:nowrap;
+  }
+  .side-btn svg{width:17px;height:17px;flex-shrink:0;opacity:.85;}
+  .side-btn:hover{background:var(--surface-2);color:var(--text);border-color:var(--border);}
+  .side-btn.active{
+    background:linear-gradient(135deg, rgba(37,244,255,0.16), rgba(157,92,255,0.16));
+    border-color:rgba(37,244,255,0.4);color:var(--text);
+    box-shadow:0 0 18px rgba(37,244,255,0.12);
+  }
+  .side-btn.active svg{color:var(--cyan);opacity:1;filter:drop-shadow(0 0 6px rgba(37,244,255,0.6));}
+  .side-foot{padding:12px 10px;border-top:1px solid var(--border);}
+  .side-collapse{
+    display:flex;align-items:center;gap:9px;width:100%;
+    background:var(--surface-2);border:1px solid var(--border);color:var(--dim);
+    font-size:12px;font-weight:600;padding:10px 12px;border-radius:10px;cursor:pointer;transition:.15s;white-space:nowrap;
+  }
+  .side-collapse svg{width:14px;height:14px;flex-shrink:0;}
+  .side-collapse:hover{color:var(--text);border-color:var(--red);}
+
+  .side-reopen{
+    position:fixed;left:14px;bottom:16px;z-index:45;display:none;
+    align-items:center;justify-content:center;width:44px;height:44px;border-radius:13px;
+    background:var(--surface);border:1px solid var(--border);color:var(--cyan);cursor:pointer;
+    box-shadow:0 12px 34px rgba(0,0,0,.45);transition:.18s;
+  }
+  .side-reopen:hover{border-color:var(--cyan);box-shadow:0 0 22px rgba(37,244,255,0.28);}
+  .side-reopen svg{width:18px;height:18px;}
+  body.side-collapsed .side-reopen{display:flex;}
+  .side-backdrop{display:none;}
+
+  .menu-btn{
+    display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;flex-shrink:0;
+    background:var(--surface);border:1px solid var(--border);color:var(--dim);border-radius:12px;cursor:pointer;transition:.15s;
+  }
+  .menu-btn:hover{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 16px rgba(37,244,255,0.15);}
+  .menu-btn svg{width:19px;height:19px;}
+  .top-left{display:flex;align-items:center;gap:16px;}
+
+  @media (max-width:900px){
+    .app-body{display:block;}
+    .sidebar{
+      position:fixed;left:0;top:0;bottom:0;height:100vh;width:252px;
+      transform:translateX(-100%);box-shadow:0 0 60px rgba(0,0,0,.5);
+      transition:transform .28s cubic-bezier(.22,1,.36,1);
+    }
+    .sidebar.open{transform:translateX(0);}
+    body.side-mobile-open .side-backdrop{display:block;position:fixed;inset:0;background:rgba(4,6,10,.55);backdrop-filter:blur(2px);z-index:39;}
+    .side-reopen{display:flex;}
+    body.side-mobile-open .side-reopen{display:none;}
+    body.side-collapsed .sidebar{width:252px;border-right:1px solid var(--border);}
+    .top-left{gap:12px;}
+  }
+
+  /* ============ PLANEJAMENTO DE GASTOS ============ */
+  .plan-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+  .plan-year{
+    display:inline-flex;align-items:center;gap:7px;
+    background:var(--bg-2);border:1px solid var(--border);color:var(--dim);
+    font-size:11.5px;font-weight:600;padding:7px 12px;border-radius:10px;
+  }
+  .plan-year input{
+    width:58px;background:var(--surface);border:1px solid var(--border);color:var(--text);
+    font-family:var(--mono);font-size:12px;padding:4px 7px;border-radius:7px;text-align:center;
+  }
+  .plan-year input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 1px rgba(37,244,255,0.35);}
+  .plan-wrap{overflow:auto;max-height:62vh;border:1px solid var(--border);border-radius:12px;background:var(--bg-2);}
+  .plan-table{border-collapse:collapse;font-size:12.5px;min-width:1180px;width:100%;}
+  .plan-table th,.plan-table td{padding:8px 10px;border-bottom:1px solid var(--border);white-space:nowrap;text-align:left;vertical-align:middle;}
+  .plan-table thead th{
+    position:sticky;top:0;z-index:3;background:var(--surface-2);color:var(--faint);
+    text-transform:uppercase;font-size:10px;letter-spacing:.08em;font-weight:700;text-align:center;
+  }
+  .plan-table tfoot td{
+    position:sticky;bottom:0;z-index:3;background:var(--surface-2);color:var(--text);
+    font-family:var(--mono);font-weight:700;text-align:center;border-top:1px solid var(--border);
+  }
+  .plan-table tr.plan-cat td{padding:7px 10px;background:var(--surface-2);border-top:2px solid var(--border);}
+  .plan-cat-name-input{
+    background:transparent;border:1px solid transparent;color:var(--text);
+    font-family:var(--display);font-size:13px;font-weight:600;padding:4px 6px;border-radius:7px;width:auto;min-width:160px;transition:.15s;
+  }
+  .plan-cat-name-input:hover{border-color:var(--border);}
+  .plan-cat-name-input:focus{outline:none;border-color:var(--cyan);background:var(--surface);}
+  .plan-cat-total{font-family:var(--mono);color:var(--cyan);margin-left:14px;font-size:12px;text-shadow:0 0 10px rgba(37,244,255,0.3);}
+  .plan-add-sub{
+    margin-left:16px;background:transparent;border:1px solid var(--border);color:var(--dim);
+    font-size:11px;font-weight:600;padding:4px 10px;border-radius:8px;cursor:pointer;transition:.15s;
+  }
+  .plan-add-sub:hover{color:var(--cyan);border-color:var(--cyan);}
+  .plan-del{background:transparent;border:none;color:var(--faint);font-size:15px;line-height:1;cursor:pointer;padding:4px 7px;border-radius:7px;transition:.15s;}
+  .plan-del:hover{color:var(--red);background:rgba(255,77,109,0.12);}
+  .plan-del-cat{float:right;margin-left:6px;}
+  .plan-table td input[type="number"]{
+    width:74px;background:var(--surface);border:1px solid var(--border);color:var(--text);
+    font-family:var(--mono);font-size:12px;padding:5px 7px;border-radius:7px;text-align:right;transition:.15s;
+  }
+  .plan-table td input[type="number"]:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 1px rgba(37,244,255,0.35);}
+  .plan-table td input.plan-text{
+    width:100%;min-width:130px;background:transparent;border:1px solid transparent;color:var(--text);
+    font-family:var(--sans);font-size:12.5px;font-weight:600;padding:4px 6px;border-radius:6px;transition:.15s;
+  }
+  .plan-table td input.plan-text:hover{border-color:var(--border);}
+  .plan-table td input.plan-text:focus{outline:none;border-color:var(--cyan);background:var(--surface);}
+  .plan-table select.plan-classe{
+    background:var(--surface);border:1px solid var(--border);color:var(--dim);
+    font-family:var(--sans);font-size:11.5px;font-weight:600;padding:5px 8px;border-radius:7px;cursor:pointer;min-width:118px;
+  }
+  .plan-table .plan-tot{font-family:var(--mono);font-weight:700;color:var(--text);text-align:right;}
+  .plan-table .plan-mtotal{font-family:var(--mono);font-size:12px;color:var(--dim);text-align:center;}
+  .plan-empty{text-align:center;padding:28px;color:var(--faint);font-size:13px;}
+  .plan-empty b{color:var(--dim);}
+  .plan-btn{
+    display:inline-flex;align-items:center;gap:7px;
+    background:linear-gradient(135deg, rgba(37,244,255,0.16), rgba(157,92,255,0.16));
+    border:1px solid rgba(37,244,255,0.4);color:var(--text);font-family:var(--sans);
+    font-size:12.5px;font-weight:700;padding:9px 15px;border-radius:10px;cursor:pointer;transition:.18s;
+  }
+  .plan-btn:hover{border-color:var(--cyan);box-shadow:0 0 0 1px rgba(37,244,255,0.35),0 0 18px rgba(37,244,255,0.2);transform:translateY(-1px);}
+  .plan-btn.ghost{background:transparent;border:1px solid var(--border);color:var(--dim);font-weight:600;}
+  .plan-btn.ghost:hover{border-color:var(--cyan);color:var(--cyan);box-shadow:none;transform:none;}
+  .plan-btn:disabled{opacity:.55;cursor:wait;transform:none;}
+
+  .toast{
+    position:fixed;bottom:20px;right:20px;z-index:200;max-width:340px;
+    background:var(--surface);border:1px solid var(--cyan);color:var(--text);
+    padding:12px 16px;border-radius:12px;box-shadow:0 14px 44px rgba(0,0,0,.5);
+    font-size:13px;font-weight:600;line-height:1.45;
+    opacity:0;transform:translateY(10px);transition:opacity .25s, transform .25s;pointer-events:none;
+  }
+  .toast.show{opacity:1;transform:none;}
 
   /* ============ TOPO ============ */
   header.top{padding:38px 30px 24px;border-bottom:1px solid var(--border);background:linear-gradient(180deg, var(--head-glow), transparent 70%);}
@@ -442,6 +638,54 @@
   .insight-title{font-size:13.5px;font-weight:700;color:var(--text);margin-bottom:5px;}
   .insight-body{font-size:12.5px;color:var(--dim);line-height:1.6;}
 
+  /* ============ LEITURA (sugestões) ============ */
+  .leitura-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px;padding-bottom:24px;border-bottom:1px solid var(--border);}
+  .leitura-sum-card{background:var(--surface-2);border:1px solid var(--border);border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;transition:border-color .2s, box-shadow .2s;}
+  .leitura-sum-card:hover{border-color:rgba(148,163,255,0.3);}
+  .leitura-sum-top{display:flex;justify-content:space-between;align-items:center;}
+  .leitura-sum-label{font-size:10.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.1em;font-weight:700;}
+  .leitura-sum-icon{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .leitura-sum-icon svg{width:15px;height:15px;stroke:currentColor;}
+  .leitura-sum-value{font-family:var(--mono);font-size:23px;font-weight:700;letter-spacing:-0.02em;}
+  .leitura-sum-foot{font-size:11.5px;color:var(--dim);line-height:1.5;}
+  .leitura-sum-bar{width:100%;height:6px;border-radius:10px;background:var(--surface);overflow:hidden;}
+  .leitura-sum-bar i{display:block;height:100%;border-radius:10px;transition:width .8s cubic-bezier(.22,1,.36,1);box-shadow:0 0 12px currentColor;}
+
+  .leitura-group{margin-bottom:30px;}
+  .leitura-group-head{display:flex;align-items:flex-start;gap:13px;margin-bottom:16px;}
+  .leitura-group-icon{width:40px;height:40px;border-radius:11px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  .leitura-group-icon svg{width:19px;height:19px;}
+  .leitura-group-title{font-family:var(--display);font-size:16.5px;font-weight:600;color:var(--text);letter-spacing:-0.01em;}
+  .leitura-group-sub{font-size:11.5px;color:var(--faint);margin-top:2px;}
+  .leitura-list{display:flex;flex-direction:column;gap:12px;}
+  .leitura-item{
+    background:var(--surface-2);border:1px solid var(--border);border-radius:14px;padding:16px 18px;
+    display:flex;gap:14px;transition:border-color .2s, box-shadow .2s;
+  }
+  .leitura-item:hover{border-color:rgba(148,163,255,0.3);box-shadow:0 0 24px rgba(148,163,255,0.06);}
+  .leitura-item-icon{width:38px;height:38px;border-radius:11px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  .leitura-item-icon svg{width:18px;height:18px;}
+  .leitura-item-body{flex:1;min-width:0;}
+  .leitura-item-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:5px;}
+  .leitura-sev{font-size:9.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;padding:3px 9px;border-radius:20px;flex-shrink:0;}
+  .leitura-item-title{font-size:13.5px;font-weight:700;color:var(--text);}
+  .leitura-item-text{font-size:12.5px;color:var(--dim);line-height:1.6;}
+  .leitura-item-text b{color:var(--text);font-weight:600;}
+  .leitura-action{
+    margin-top:11px;padding:10px 13px;border-radius:10px;display:flex;gap:9px;align-items:flex-start;
+    background:var(--surface);border:1px solid var(--border);font-size:12px;line-height:1.55;
+  }
+  .leitura-action svg{width:14px;height:14px;flex-shrink:0;margin-top:1px;}
+  .leitura-ok{
+    display:flex;align-items:center;gap:12px;background:rgba(61,255,165,0.06);border:1px dashed rgba(61,255,165,0.4);
+    border-radius:14px;padding:18px 20px;font-size:13px;color:var(--dim);line-height:1.6;
+  }
+  .leitura-ok svg{width:22px;height:22px;color:var(--green);flex-shrink:0;filter:drop-shadow(0 0 8px rgba(61,255,165,0.5));}
+  .leitura-ok b{color:var(--green);}
+  @media (max-width:900px){
+    .leitura-summary{grid-template-columns:1fr;}
+  }
+
   .tx-wrap{overflow:auto;max-height:420px;border:1px solid var(--border);border-radius:12px;background:var(--bg-2);}
   .tx-table{width:100%;border-collapse:collapse;font-size:13px;}
   .tx-table thead th{
@@ -513,10 +757,15 @@
 
 <header class="top">
   <div class="top-inner">
-    <div>
-      <div class="eyebrow"><span class="dot"></span> Painel de Finanças Pessoais · Multiplanilha</div>
-      <h1><span class="neon">Neon</span> <span class="neon2">Finance</span></h1>
-      <div class="subtitle">Conecte a <b>sua</b> planilha de finanças pessoais (mesmo formato, aba <b>Lançamentos</b>) e acompanhe receitas, despesas e investimentos em um painel neon. Cada pessoa usa a própria planilha.</div>
+    <div class="top-left">
+      <button class="menu-btn" id="btnMenu" title="Menu" aria-label="Abrir menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+      <div>
+        <div class="eyebrow"><span class="dot"></span> Painel de Finanças Pessoais · Multiplanilha</div>
+        <h1><span class="neon">Neon</span> <span class="neon2">Finance</span></h1>
+        <div class="subtitle">Conecte a <b>sua</b> planilha de finanças pessoais (mesmo formato, aba <b>Lançamentos</b>) e acompanhe receitas, despesas e investimentos em um painel neon. Cada pessoa usa a própria planilha.</div>
+      </div>
     </div>
     <div class="auth-area">
       <div class="theme-wrap" id="themeWrap">
@@ -528,7 +777,7 @@
         <div class="theme-menu" id="themeMenu">
           <button class="theme-opt" data-theme="neon"><span class="swatch" style="background:#25F4FF;color:#25F4FF"></span>Neon</button>
           <button class="theme-opt" data-theme="light"><span class="swatch" style="background:#7C3AED;color:#7C3AED"></span>Claro</button>
-          <button class="theme-opt" data-theme="dark"><span class="swatch" style="background:#4FD8FF;color:#4FD8FF"></span>Escuro</button>
+          <button class="theme-opt" data-theme="neutro"><span class="swatch" style="background:#34D399;color:#34D399"></span>Neutro</button>
         </div>
       </div>
       <button class="lock-toggle" id="btnLock" style="display:none">Trancar</button>
@@ -537,9 +786,33 @@
   </div>
 </header>
 
-<section class="connect-section">
-  <div class="wrap">
-    <div class="connect-card">
+<div class="app-body">
+  <aside class="sidebar" id="sidebar">
+    <div class="side-head">
+      <div class="side-logo"><span class="ln">Neon</span> <span class="lm">Finance</span></div>
+      <button class="side-close" id="sideClose" title="Ocultar painel" aria-label="Ocultar painel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+    </div>
+    <nav class="side-nav">
+      <button class="side-btn active" data-page="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h7v7H4zM13 4h7v4h-7zM13 11h7v9h-7zM4 14h7v7H4z"/></svg><span>Dashboard</span></button>
+      <button class="side-btn" data-page="receitas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg><span>Receitas</span></button>
+      <button class="side-btn" data-page="lancamentos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Lançamentos</span></button>
+      <button class="side-btn" data-page="metas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg><span>Gestão de Metas</span></button>
+      <button class="side-btn" data-page="projecoes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4v16h16"/><path d="M7 14l4-4 3 3 5-6"/></svg><span>Projeções</span></button>
+      <button class="side-btn" data-page="planejamento"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span>Planejamento</span></button>
+      <button class="side-btn" data-page="leitura"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 4.8L20 8l-4 4 1 6-5-2.6L7 18l1-6-4-4 5.6-1.2z"/><path d="M19 15v4M21 17h-4"/></svg><span>Leitura</span></button>
+      <button class="side-btn" data-page="importacao"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 11l4 4 4-4"/><path d="M4 21h16"/></svg><span>Importação</span></button>
+    </nav>
+    <div class="side-foot">
+      <button class="side-collapse" id="sideCollapse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>Ocultar painel</button>
+    </div>
+  </aside>
+  <div class="side-backdrop" id="sideBackdrop"></div>
+  <button class="side-reopen" id="sideReopen" title="Abrir menu" aria-label="Abrir menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+  <div class="app-main">
+    <section class="page" data-page="importacao">
+      <section class="connect-section">
+        <div class="wrap">
+          <div class="connect-card">
       <div class="connect-left">
         <div class="connect-title">Conecte sua planilha</div>
         <div class="connect-sub">Cole o link do Google Sheets abaixo. <b>Planilha pública</b> ("qualquer pessoa com o link") funciona sem login. Para <b>planilha privada</b>, entre com o Google na tela de acesso e ela será lida pela sua conta.</div>
@@ -559,9 +832,10 @@
       </div>
     </div>
   </div>
-</section>
+      </section>
+    </section>
 
-<div class="filter-bar">
+<div class="filter-bar" id="filterBar">
   <div class="filter-group">
     <label for="selAno">Ano</label>
     <select id="selAno" class="filter-select"></select>
@@ -583,6 +857,7 @@
 
 <div class="wrap">
 
+  <section class="page" data-page="dashboard">
   <section class="kpi-section">
     <div class="section-label">Indicadores principais</div>
     <div class="kpi-grid">
@@ -730,6 +1005,24 @@
       </div>
     </div>
 
+    <div class="row cols-1">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">Sugestões para melhor controle</div>
+            <div class="panel-sub">Leituras automáticas geradas a partir dos dados do período filtrado</div>
+          </div>
+        </div>
+        <div class="insights-grid" id="insightsGrid"></div>
+      </div>
+    </div>
+  </section>
+  </section>
+
+  <section class="page" data-page="receitas">
+  <section class="panels">
+    <div class="section-label">Receitas e canais</div>
+
     <div class="row cols-2">
       <div class="panel">
         <div class="panel-head">
@@ -751,7 +1044,11 @@
         <div class="chart-box"><canvas id="chartForma"></canvas></div>
       </div>
     </div>
+  </section>
+  </section>
 
+  <section class="page" data-page="lancamentos">
+  <section class="panels">
     <div class="row cols-1">
       <div class="panel">
         <div class="panel-head">
@@ -779,7 +1076,11 @@
         <div class="tx-summary" id="txSummary"></div>
       </div>
     </div>
+  </section>
+  </section>
 
+  <section class="page" data-page="metas">
+  <section class="panels">
     <div class="row cols-1">
       <div class="panel">
         <div class="panel-head">
@@ -822,25 +1123,236 @@
         </div>
       </div>
     </div>
+  </section>
+  </section>
 
+  <section class="page" data-page="projecoes">
+  <section class="panels">
+    <div class="row cols-1">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">Projeções e Simulações</div>
+            <div class="panel-sub" id="projSub">Projeta seu caixa e seus investimentos a partir das médias do período filtrado</div>
+          </div>
+          <div class="seg-group" id="projSeg">
+            <button class="seg-btn active" data-mode="caixa">Caixa</button>
+            <button class="seg-btn" data-mode="invest">Investimentos</button>
+          </div>
+        </div>
+        <div class="goals-row" id="projInputs">
+          <div class="goal-card" id="projCardSaldoIni">
+            <div class="gl">Saldo inicial</div>
+            <div class="gi"><span>R$</span><input id="projSaldoIni" type="number" min="0" step="50" value="0"></div>
+          </div>
+          <div class="goal-card" id="projCardRecCresc">
+            <div class="gl">Crescimento da receita</div>
+            <div class="gi"><span>%/mês</span><input id="projRecCresc" type="number" min="-50" max="50" step="0.5" value="0"></div>
+          </div>
+          <div class="goal-card" id="projCardDespCresc">
+            <div class="gl">Crescimento das despesas</div>
+            <div class="gi"><span>%/mês</span><input id="projDespCresc" type="number" min="-50" max="50" step="0.5" value="0"></div>
+          </div>
+          <div class="goal-card" id="projCardAporte">
+            <div class="gl">Aporte mensal em investimentos</div>
+            <div class="gi"><span>R$</span><input id="projAporte" type="number" min="0" step="50" placeholder="auto = média do período"></div>
+          </div>
+          <div class="goal-card" id="projCardTaxa">
+            <div class="gl">Retorno dos investimentos</div>
+            <div class="gi"><span>% a.a.</span><input id="projTaxa" type="number" min="0" max="50" step="0.5" value="10"></div>
+          </div>
+          <div class="goal-card" id="projCardHorizonte">
+            <div class="gl">Horizonte</div>
+            <div class="gi"><span>meses</span><input id="projHorizonte" type="number" min="1" max="60" step="1" value="12"></div>
+          </div>
+        </div>
+        <div class="bullet-summary" id="projSummary"></div>
+        <div class="chart-box tall"><canvas id="chartProj"></canvas></div>
+      </div>
+    </div>
+  </section>
+  </section>
+
+  <section class="page" data-page="planejamento">
+  <section class="panels">
+    <div class="row cols-1">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">Planejamento</div>
+            <div class="panel-sub">Previsto mensal por categoria e subcategoria — edite os valores de cada mês do ano e compare com o realizado</div>
+          </div>
+        </div>
+        <div class="plan-toolbar">
+          <label class="plan-year">Ano <input id="planAno" type="number" min="1900" max="2100" step="1"></label>
+          <button class="plan-btn" id="planAddCat">+ Nova categoria</button>
+          <button class="plan-btn ghost" id="planImport">Importar da planilha</button>
+          <span class="filter-status" id="planHint"><b>Previsto</b> anual</span>
+        </div>
+        <div class="bullet-summary" id="planSummary"></div>
+        <div class="plan-wrap">
+          <table class="plan-table">
+            <thead>
+              <tr>
+                <th>Subcategoria</th>
+                <th>Classe</th>
+                <th>Jan</th><th>Fev</th><th>Mar</th><th>Abr</th><th>Mai</th><th>Jun</th>
+                <th>Jul</th><th>Ago</th><th>Set</th><th>Out</th><th>Nov</th><th>Dez</th>
+                <th>Total</th><th></th>
+              </tr>
+            </thead>
+            <tbody id="planBody"></tbody>
+            <tfoot id="planFoot">
+              <tr>
+                <td colspan="2" style="text-align:left">Totais do mês</td>
+                <td class="plan-mtotal" data-m="0"></td><td class="plan-mtotal" data-m="1"></td>
+                <td class="plan-mtotal" data-m="2"></td><td class="plan-mtotal" data-m="3"></td>
+                <td class="plan-mtotal" data-m="4"></td><td class="plan-mtotal" data-m="5"></td>
+                <td class="plan-mtotal" data-m="6"></td><td class="plan-mtotal" data-m="7"></td>
+                <td class="plan-mtotal" data-m="8"></td><td class="plan-mtotal" data-m="9"></td>
+                <td class="plan-mtotal" data-m="10"></td><td class="plan-mtotal" data-m="11"></td>
+                <td class="plan-tot" id="planTotalGeral">—</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <div class="panel-head" style="margin-top:24px">
+          <div>
+            <div class="panel-title">Planejamento mensal</div>
+            <div class="panel-sub">Total previsto (receita) × gastos previstos por mês · linha azul = saldo</div>
+          </div>
+        </div>
+        <div class="chart-box tall"><canvas id="chartPlanComp"></canvas></div>
+        <div class="panel-head" style="margin-top:24px">
+          <div>
+            <div class="panel-title">Lançamentos de Receita</div>
+            <div class="panel-sub">Previsto mensal de receitas — edite os valores de cada mês do ano</div>
+          </div>
+          <div class="plan-toolbar">
+            <button class="plan-btn" id="planRecAdd">+ Nova receita</button>
+          </div>
+        </div>
+        <div class="plan-wrap">
+          <table class="plan-table">
+            <thead>
+              <tr>
+                <th>Receita</th>
+                <th></th>
+                <th>Jan</th><th>Fev</th><th>Mar</th><th>Abr</th><th>Mai</th><th>Jun</th>
+                <th>Jul</th><th>Ago</th><th>Set</th><th>Out</th><th>Nov</th><th>Dez</th>
+                <th>Total</th><th></th>
+              </tr>
+            </thead>
+            <tbody id="planRecBody"></tbody>
+            <tfoot id="planRecFoot">
+              <tr>
+                <td colspan="2" style="text-align:left">Totais do mês</td>
+                <td class="plan-mtotal" data-m="0"></td><td class="plan-mtotal" data-m="1"></td>
+                <td class="plan-mtotal" data-m="2"></td><td class="plan-mtotal" data-m="3"></td>
+                <td class="plan-mtotal" data-m="4"></td><td class="plan-mtotal" data-m="5"></td>
+                <td class="plan-mtotal" data-m="6"></td><td class="plan-mtotal" data-m="7"></td>
+                <td class="plan-mtotal" data-m="8"></td><td class="plan-mtotal" data-m="9"></td>
+                <td class="plan-mtotal" data-m="10"></td><td class="plan-mtotal" data-m="11"></td>
+                <td class="plan-tot" id="planRecTotalGeral">—</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <div class="panel-head" style="margin-top:24px">
+          <div>
+            <div class="panel-title">Lançamentos de Investimento</div>
+            <div class="panel-sub">Previsto mensal para investir — edite os valores de cada mês do ano</div>
+          </div>
+          <div class="plan-toolbar">
+            <button class="plan-btn" id="planInvAdd">+ Novo investimento</button>
+          </div>
+        </div>
+        <div class="plan-wrap">
+          <table class="plan-table">
+            <thead>
+              <tr>
+                <th>Investimento</th>
+                <th></th>
+                <th>Jan</th><th>Fev</th><th>Mar</th><th>Abr</th><th>Mai</th><th>Jun</th>
+                <th>Jul</th><th>Ago</th><th>Set</th><th>Out</th><th>Nov</th><th>Dez</th>
+                <th>Total</th><th></th>
+              </tr>
+            </thead>
+            <tbody id="planInvBody"></tbody>
+            <tfoot id="planInvFoot">
+              <tr>
+                <td colspan="2" style="text-align:left">Totais do mês</td>
+                <td class="plan-mtotal" data-m="0"></td><td class="plan-mtotal" data-m="1"></td>
+                <td class="plan-mtotal" data-m="2"></td><td class="plan-mtotal" data-m="3"></td>
+                <td class="plan-mtotal" data-m="4"></td><td class="plan-mtotal" data-m="5"></td>
+                <td class="plan-mtotal" data-m="6"></td><td class="plan-mtotal" data-m="7"></td>
+                <td class="plan-mtotal" data-m="8"></td><td class="plan-mtotal" data-m="9"></td>
+                <td class="plan-mtotal" data-m="10"></td><td class="plan-mtotal" data-m="11"></td>
+                <td class="plan-tot" id="planInvTotalGeral">—</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <div class="panel-head" style="margin-top:24px">
+          <div>
+            <div class="panel-title">Investimentos: planejado × realizado</div>
+            <div class="panel-sub">Planejado para investir × valor realizado nos lançamentos do ano selecionado</div>
+          </div>
+        </div>
+        <div class="chart-box tall"><canvas id="chartPlanInv"></canvas></div>
+      </div>
+    </div>
+  </section>
+  </section>
+
+  <section class="page" data-page="leitura">
+  <section class="panels">
     <div class="row cols-1">
       <div class="panel">
         <div class="panel-head">
           <div>
             <div class="panel-title">Sugestões para melhor controle</div>
-            <div class="panel-sub">Leituras automáticas geradas a partir dos dados do período filtrado</div>
+            <div class="panel-sub" id="leituraSub">Leitura automática gerada a partir dos dados do período filtrado — apenas o que precisa de atenção e como resolver</div>
           </div>
         </div>
-        <div class="insights-grid" id="insightsGrid"></div>
+        <div class="leitura-summary" id="leituraSummary"></div>
+
+        <div class="leitura-group" id="leituraAlertasGroup">
+          <div class="leitura-group-head">
+            <div class="leitura-group-icon" style="background:rgba(255,77,109,0.12);border:1px solid rgba(255,77,109,0.35);color:var(--red)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></div>
+            <div>
+              <div class="leitura-group-title">O que precisa de atenção</div>
+              <div class="leitura-group-sub" id="leituraAlertasSub"></div>
+            </div>
+          </div>
+          <div class="leitura-list" id="leituraAlertas"></div>
+        </div>
+
+        <div class="leitura-group" id="leituraDicasGroup">
+          <div class="leitura-group-head">
+            <div class="leitura-group-icon" style="background:rgba(37,244,255,0.12);border:1px solid rgba(37,244,255,0.35);color:var(--cyan)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18h.01M12 14a4 4 0 0 0 2.5-7.1A4.5 4.5 0 0 0 7.6 5.6 4 4 0 0 0 12 14z"/><path d="M9 18h6"/></svg></div>
+            <div>
+              <div class="leitura-group-title">Dicas para melhorar suas finanças</div>
+              <div class="leitura-group-sub" id="leituraDicasSub"></div>
+            </div>
+          </div>
+          <div class="leitura-list" id="leituraDicas"></div>
+        </div>
       </div>
     </div>
-
   </section>
+  </section>
+
 </div>
 
 <footer>
   <b>Como funciona:</b> cole o link da sua planilha Google (mesma estrutura do template — aba <b>Lançamentos</b> com colunas Data, Descrição, Valor, Tipo, Tipo2, Categoria, Subcategoria, Conta/Cartão, Forma Pagamento, Observação, Mês, Ano). <b>Planilhas públicas</b> são lidas sem login; <b>privadas</b> exigem o login com Google (a planilha precisa estar compartilhada com a conta usada). Os dados ficam apenas no seu navegador — nada é enviado a servidores além do Google Sheets.
 </footer>
+</div>
+</div>
 
 <script>
 (function(){
@@ -874,15 +1386,16 @@ var THEME_CONFIG = {
     C: { cyan:'#0E9BB0', green:'#0FA45C', magenta:'#D81B8A', purple:'#7C3AED', amber:'#C77E10', red:'#DC3A55', violet:'#A020C0', blue:'#0B84C8', text:'#0F1628', dim:'#4E5A72' },
     tooltip:'#FFFFFF', grid:'rgba(35,47,92,0.08)', border:'rgba(35,47,92,0.14)'
   },
-  dark: {
-    C: { cyan:'#4FD8FF', green:'#5BE9A9', magenta:'#FF6BD6', purple:'#B387FF', amber:'#FFC76B', red:'#FF6B85', violet:'#D07BFF', blue:'#7FE4FF', text:'#E9EEF9', dim:'#9AA4B9' },
-    tooltip:'#141923', grid:'rgba(148,163,255,0.08)', border:'rgba(148,163,255,0.12)'
+  neutro: {
+    C: { cyan:'#3B82F6', green:'#34D399', magenta:'#2DD4BF', purple:'#818CF8', amber:'#FBBF24', red:'#FB7185', violet:'#A78BFA', blue:'#60A5FA', text:'#F1F5F9', dim:'#A6B4C9' },
+    tooltip:'#132038', grid:'rgba(147,197,253,0.10)', border:'rgba(147,197,253,0.14)'
   }
 };
 var CHART = { bg:'#0C0F18', grid:'rgba(148,163,255,0.08)', border:'rgba(148,163,255,0.12)' };
 function currentTheme(){
   var t = null;
   try{ t = localStorage.getItem('neonTheme'); }catch(e){}
+  if(t === 'dark') t = 'neutro';
   return THEME_CONFIG[t] ? t : 'neon';
 }
 function loadThemeConfig(){
@@ -899,7 +1412,7 @@ function loadThemeConfig(){
 }
 function renderThemeBtnLabel(t){
   var el = document.getElementById('themeBtnLabel');
-  if(el) el.textContent = t === 'light' ? 'Claro' : t === 'dark' ? 'Escuro' : 'Neon';
+  if(el) el.textContent = t === 'light' ? 'Claro' : t === 'neutro' ? 'Neutro' : 'Neon';
   var menu = document.getElementById('themeMenu');
   if(menu){
     Array.prototype.forEach.call(menu.querySelectorAll('.theme-opt'), function(b){
@@ -1052,6 +1565,12 @@ var RAW = [];
 var charts = {};
 var COMP_MODE = 'rec+desp';
 var goals = loadGoals();
+var PROJ_MODE = 'caixa';
+function defaultProj(){ return { saldoIni:0, recCresc:0, despCresc:0, aporte:null, taxa:10, horizonte:12 }; }
+function loadProj(){ try{ var p = JSON.parse(localStorage.getItem('neonProj')); if(p && typeof p === 'object') return Object.assign(defaultProj(), p); }catch(e){} return defaultProj(); }
+var proj = loadProj();
+function saveProj(){ try{ localStorage.setItem('neonProj', JSON.stringify(proj)); }catch(e){} }
+function round2(x){ return Math.round((x||0)*100)/100; }
 
 /* ================= CHART DEFAULTS ================= */
 if (window.Chart) {
@@ -1749,8 +2268,12 @@ function render(){
   }
 
   renderMetas(main, {totalReceita:totalReceita, totalDespesa:totalDespesa, totalInvest:totalInvest, saldo:saldo, taxa:taxa, nMeses:nMeses, despCatSorted:despCatSorted});
+  renderProjecoes(main, {totalReceita:totalReceita, totalDespesa:totalDespesa, totalInvest:totalInvest, nMeses:nMeses});
+  updatePlanChart();
+  updatePlanInvChart();
   renderInsights({totalReceita:totalReceita, totalDespesa:totalDespesa, totalInvest:totalInvest, saldo:saldo, taxa:taxa, nMeses:nMeses, despGrupoSorted:despGrupoSorted, despCatSorted:despCatSorted, formaSorted:formaSorted, naoEssPct:naoEssPct, health:health, hLabel:hLabel, hColor:hColor});
   renderTransacoes(main);
+  renderLeitura(main);
 }
 
 function updateComparativo(){
@@ -1849,7 +2372,13 @@ function renderEmpty(){
   document.getElementById('metaSummary').innerHTML = '';
   document.getElementById('bulletList').innerHTML = '';
   document.getElementById('insightsGrid').innerHTML = '<div class="empty-state">Sem dados suficientes para gerar leituras neste período.</div>';
-  ['monthly','despCat','gauge','donut','canais','forma','metaGauge','comparativo'].forEach(function(key){
+  document.getElementById('leituraSub').textContent = 'Leitura automática gerada a partir dos dados do período filtrado — apenas o que precisa de atenção e como resolver';
+  document.getElementById('leituraSummary').innerHTML = '';
+  document.getElementById('leituraAlertasSub').textContent = '';
+  document.getElementById('leituraAlertas').innerHTML = '';
+  document.getElementById('leituraDicasSub').textContent = '';
+  document.getElementById('leituraDicas').innerHTML = '';
+  ['monthly','despCat','gauge','donut','canais','forma','metaGauge','comparativo','proj','planComp','planInv'].forEach(function(key){
     var c = charts[key];
     if(!c) return;
     c.data.labels = [];
@@ -1860,6 +2389,8 @@ function renderEmpty(){
   document.getElementById('gaugeStatus').textContent = '—';
   document.getElementById('metaGaugeValue').textContent = '—';
   document.getElementById('metaGaugeStatus').textContent = '';
+  document.getElementById('projSummary').innerHTML = '';
+  document.getElementById('projSub').textContent = 'Projeta seu caixa e seus investimentos a partir das médias do período filtrado';
   document.getElementById('txBody').innerHTML = '<tr><td colspan="6" class="tx-cat" style="text-align:center;padding:22px">Nenhum lançamento no período selecionado.</td></tr>';
   document.getElementById('txSummary').innerHTML = '';
   document.getElementById('txSub').textContent = 'Detalhe dos lançamentos conforme os filtros de mês e ano';
@@ -1979,6 +2510,128 @@ function renderMetas(main, ctx){
   });
 }
 
+function projCard(label, value, color, subTxt){
+  return '<div class="bs-card"><div class="bs-label">' + label + '</div>' +
+    '<div class="bs-value"' + (color ? ' style="color:' + color + '"' : '') + '>' + value + '</div>' +
+    (subTxt ? '<div class="bs-sub">' + subTxt + '</div>' : '') + '</div>';
+}
+function projReadInputs(){
+  proj.saldoIni = parseFloat(document.getElementById('projSaldoIni').value) || 0;
+  proj.recCresc = parseFloat(document.getElementById('projRecCresc').value) || 0;
+  proj.despCresc = parseFloat(document.getElementById('projDespCresc').value) || 0;
+  var av = parseFloat(document.getElementById('projAporte').value);
+  proj.aporte = isNaN(av) ? null : av;
+  proj.taxa = parseFloat(document.getElementById('projTaxa').value) || 0;
+  var h = Math.round(parseFloat(document.getElementById('projHorizonte').value) || 12);
+  proj.horizonte = clamp(h, 1, 60);
+  saveProj();
+}
+function renderProjecoes(main, ctx){
+  var showCaixa = PROJ_MODE === 'caixa';
+  [['projCardSaldoIni',showCaixa],['projCardRecCresc',showCaixa],['projCardDespCresc',showCaixa],
+   ['projCardAporte',!showCaixa],['projCardTaxa',!showCaixa]].forEach(function(p){
+    var el = document.getElementById(p[0]);
+    if(el) el.style.display = p[1] ? '' : 'none';
+  });
+
+  projReadInputs();
+  document.getElementById('projSaldoIni').value = proj.saldoIni;
+  document.getElementById('projRecCresc').value = proj.recCresc;
+  document.getElementById('projDespCresc').value = proj.despCresc;
+  document.getElementById('projAporte').value = (proj.aporte === null || proj.aporte === '') ? '' : proj.aporte;
+  document.getElementById('projTaxa').value = proj.taxa;
+  document.getElementById('projHorizonte').value = proj.horizonte;
+
+  var n = proj.horizonte;
+  var avgRec = ctx.nMeses ? ctx.totalReceita / ctx.nMeses : 0;
+  var avgDesp = ctx.nMeses ? ctx.totalDespesa / ctx.nMeses : 0;
+  var avgInv = ctx.nMeses ? ctx.totalInvest / ctx.nMeses : 0;
+  var box = document.getElementById('projSummary');
+  var sub = document.getElementById('projSub');
+  var labels = [], datasets = [], options = null, cards = '';
+
+  if(showCaixa){
+    sub.textContent = 'Projeção de caixa a partir das médias do período filtrado · crescimento composto mensal sobre receita/despesa · aportes em investimentos são tratados à parte';
+    var saldo = proj.saldoIni, recs = [], desps = [], sals = [], totRec = 0, totDesp = 0;
+    for(var i = 1; i <= n; i++){
+      var rec = avgRec * Math.pow(1 + proj.recCresc/100, i-1);
+      var desp = avgDesp * Math.pow(1 + proj.despCresc/100, i-1);
+      saldo += rec - desp;
+      totRec += rec; totDesp += desp;
+      labels.push('M' + i);
+      recs.push(round2(rec)); desps.push(round2(desp)); sals.push(round2(saldo));
+    }
+    datasets = [
+      { type:'bar', label:'Receita projetada', data:recs, backgroundColor:hexA(C.cyan,0.55), borderColor:hexA(C.cyan,0.8), borderWidth:1, borderRadius:4, yAxisID:'y', order:2, barThickness:12 },
+      { type:'bar', label:'Despesa projetada', data:desps, backgroundColor:hexA(C.magenta,0.55), borderColor:hexA(C.magenta,0.8), borderWidth:1, borderRadius:4, yAxisID:'y', order:2, barThickness:12 },
+      { type:'line', label:'Saldo acumulado', data:sals, borderColor:C.green, backgroundColor:C.green, tension:.32, borderWidth:2.6, yAxisID:'y1', order:1, neonGlow:true, glowColor:C.green, pointRadius:3, pointHoverRadius:6, pointBackgroundColor:C.green, pointBorderColor:C.green }
+    ];
+    var finalSaldo = sals[n-1], folga = round2(avgRec - avgDesp);
+    cards =
+      projCard('Saldo projetado em ' + n + ' meses', fmtBRL(finalSaldo), finalSaldo < 0 ? C.red : C.green, finalSaldo < 0 ? 'abaixo de zero — despesas superam a receita' : 'conforme os cenários configurados') +
+      projCard('Receita no horizonte', fmtBRL(totRec), C.cyan, 'soma dos ' + n + ' meses') +
+      projCard('Despesa no horizonte', fmtBRL(totDesp), C.magenta, 'soma dos ' + n + ' meses') +
+      projCard('Folga de caixa por mês', fmtBRL(folga), folga < 0 ? C.red : C.amber, 'média do período filtrado');
+    options = {
+      responsive:true, maintainAspectRatio:false,
+      interaction:{ mode:'index', intersect:false },
+      plugins:{ legend:{ labels:{ color:C.dim, font:{size:11, weight:600}, boxWidth:9, boxHeight:9, padding:11 } },
+        tooltip:{ backgroundColor:CHART.bg, borderColor:'rgba(37,244,255,0.35)', borderWidth:1, padding:12, titleFont:{weight:600}, bodyFont:{size:12},
+          callbacks:{ label:function(c2){ return ' ' + c2.dataset.label + ': ' + fmtBRLf(c2.parsed.y); } } } },
+      scales:{
+        x:{ grid:{display:false}, ticks:{font:{size:10}, autoSkip:true, maxTicksLimit:16} },
+        y:{ position:'left', grid:{color:CHART.grid}, ticks:{callback:function(v){ return fmtBRL(v); }, font:{size:10}} },
+        y1:{ position:'right', grid:{display:false}, ticks:{callback:function(v){ return fmtBRL(v); }, font:{size:10}} }
+      }
+    };
+  } else {
+    sub.textContent = 'Acumulação de investimentos com juros compostos mensais (taxa anual convertida) · aporte padrão = média do período; deixe em branco para usar o automático';
+    var aporte = proj.aporte !== null ? proj.aporte : avgInv;
+    var rMes = Math.pow(1 + proj.taxa/100, 1/12) - 1;
+    var acc = 0, soma = 0, vals = [], valsNoRet = [];
+    for(var j = 1; j <= n; j++){
+      acc = acc * (1 + rMes) + aporte;
+      soma += aporte;
+      labels.push('M' + j);
+      vals.push(round2(acc)); valsNoRet.push(round2(soma));
+    }
+    datasets = [
+      { type:'line', label:'Acumulado com retorno', data:vals, borderColor:C.purple, tension:.25, borderWidth:2.8, order:1, neonGlow:true, glowColor:C.purple, pointRadius:2.5, pointHoverRadius:6, pointBackgroundColor:C.purple, pointBorderColor:C.purple,
+        fill:true, backgroundColor:function(c3){ return makeAreaGradient(c3.chart.ctx, c3.chart.chartArea, C.purple); } },
+      { type:'line', label:'Apenas aportes (sem retorno)', data:valsNoRet, borderColor:C.dim, borderDash:[5,4], backgroundColor:C.dim, tension:.25, borderWidth:1.6, order:2, pointRadius:2, pointHoverRadius:5, pointBackgroundColor:C.dim, pointBorderColor:C.dim }
+    ];
+    var rend = acc - soma;
+    cards =
+      projCard('Acumulado em ' + n + ' meses', fmtBRL(acc), C.purple, 'com retorno de ' + fmtPct(proj.taxa) + ' a.a.') +
+      projCard('Total aportado', fmtBRL(soma), C.cyan, 'aporte de ' + fmtBRL(aporte) + '/mês') +
+      projCard('Rendimentos', fmtBRL(rend), rend >= 0 ? C.green : C.red, 'acumulado − aportes') +
+      projCard('Aporte mensal', fmtBRL(aporte), C.green, proj.aporte === null ? 'auto (média do período)' : 'manual');
+    options = {
+      responsive:true, maintainAspectRatio:false,
+      interaction:{ mode:'index', intersect:false },
+      plugins:{ legend:{ labels:{ color:C.dim, font:{size:11, weight:600}, boxWidth:9, boxHeight:9, padding:11 } },
+        tooltip:{ backgroundColor:CHART.bg, borderColor:'rgba(157,92,255,0.35)', borderWidth:1, padding:12, titleFont:{weight:600}, bodyFont:{size:12},
+          callbacks:{ label:function(c2){ return ' ' + c2.dataset.label + ': ' + fmtBRLf(c2.parsed.y); } } } },
+      scales:{
+        x:{ grid:{display:false}, ticks:{font:{size:10}, autoSkip:true, maxTicksLimit:16} },
+        y:{ grid:{color:CHART.grid}, ticks:{callback:function(v){ return fmtBRL(v); }, font:{size:10}} }
+      }
+    };
+  }
+
+  box.innerHTML = cards;
+  if(!charts.proj){
+    charts.proj = new Chart(document.getElementById('chartProj'), { type: showCaixa ? 'bar' : 'line', data:{ labels: labels, datasets: datasets }, options: options });
+  } else {
+    var p = charts.proj;
+    p.config.type = showCaixa ? 'bar' : 'line';
+    p.options = options;
+    p.data.labels = labels;
+    p.data.datasets = datasets;
+    p.update();
+  }
+}
+
 function monthlyAvgCat(cat){
   var main = filterMain();
   var tot = 0;
@@ -2056,6 +2709,235 @@ function renderInsights(ctx){
       '<svg viewBox="0 0 24 24" fill="none" stroke="'+ins.color+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+ins.icon+'</svg></div>' +
       '<div><div class="insight-title">'+ins.title+'</div><div class="insight-body">'+ins.body+'</div></div></div>';
   }).join('');
+}
+
+/* ================= LEITURA (sugestões p/ melhor controle) ================= */
+function periodoTxtLeitura(){
+  return (state.ano==='all' && state.mes==='all') ? 'todo o período'
+    : (state.ano!=='all' && state.mes!=='all') ? MESES_FULL[parseInt(state.mes,10)-1] + ' de ' + state.ano
+    : state.ano!=='all' ? 'o ano de ' + state.ano
+    : MESES_FULL[parseInt(state.mes,10)-1] + ' (todos os anos)';
+}
+function leituraSevBadge(sev){
+  var c = sev === 'critico' ? C.red : C.amber;
+  var txt = sev === 'critico' ? 'Crítico' : 'Atenção';
+  return '<span class="leitura-sev" style="background:'+hexA(c,0.12)+';color:'+c+';border:1px solid '+hexA(c,0.4)+'">'+txt+'</span>';
+}
+function leituraAlertCard(a){
+  return '<div class="leitura-item">' +
+    '<div class="leitura-item-icon" style="background:'+hexA(a.color,0.12)+';border:1px solid '+hexA(a.color,0.35)+';box-shadow:0 0 16px '+hexA(a.color,0.18)+'">' +
+    '<svg viewBox="0 0 24 24" fill="none" stroke="'+a.color+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+a.icon+'</svg></div>' +
+    '<div class="leitura-item-body">' +
+      '<div class="leitura-item-head">' + leituraSevBadge(a.sev) + '<div class="leitura-item-title">'+a.title+'</div></div>' +
+      '<div class="leitura-item-text">'+a.text+'</div>' +
+      '<div class="leitura-action" style="border-color:'+hexA(a.color,0.28)+'">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="'+a.color+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg>' +
+        '<span>' + a.action + '</span></div>' +
+    '</div></div>';
+}
+function leituraTipCard(t){
+  return '<div class="leitura-item">' +
+    '<div class="leitura-item-icon" style="background:'+hexA(t.color,0.12)+';border:1px solid '+hexA(t.color,0.35)+';box-shadow:0 0 16px '+hexA(t.color,0.18)+'">' +
+    '<svg viewBox="0 0 24 24" fill="none" stroke="'+t.color+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+t.icon+'</svg></div>' +
+    '<div class="leitura-item-body">' +
+      '<div class="leitura-item-head"><div class="leitura-item-title">'+t.title+'</div></div>' +
+      '<div class="leitura-item-text">'+t.text+'</div>' +
+    '</div></div>';
+}
+function renderLeitura(main){
+  var totalReceita = 0, totalDespesa = 0, totalInvest = 0, despNao = 0;
+  var monthMap = new Map();
+  main.forEach(function(r){
+    if(r.tipo === 'Receita') totalReceita += r.v;
+    else if(r.tipo === 'Gasto'){
+      totalDespesa += r.v;
+      if(/não|nao/i.test(r.tipo2)) despNao += r.v;
+    }
+    else if(r.tipo === 'Investimento') totalInvest += r.v;
+    if(r.d){
+      var k = r.d.slice(0,7);
+      if(!monthMap.has(k)) monthMap.set(k, {rec:0, desp:0, inv:0});
+      var o = monthMap.get(k);
+      if(r.tipo === 'Receita') o.rec += r.v;
+      else if(r.tipo === 'Gasto') o.desp += r.v;
+      else if(r.tipo === 'Investimento') o.inv += r.v;
+    }
+  });
+  var saldo = totalReceita - totalDespesa;
+  var nMeses = Math.max(monthMap.size, 1);
+  var taxa = totalReceita ? saldo/totalReceita*100 : 0;
+  var naoEssPct = totalDespesa ? despNao/totalDespesa*100 : 0;
+  var invPct = totalReceita ? totalInvest/totalReceita*100 : 0;
+  var avgRec = totalReceita/nMeses;
+  var avgDesp = totalDespesa/nMeses;
+
+  var despCatSorted = sortedEntries(groupSum(main.filter(function(r){ return isDespesa(r.tipo); }), function(r){ return r.cat || 'Sem categoria'; }));
+
+  var mesesDeficit = 0, maiorDeficit = 0, piorMes = '';
+  monthMap.forEach(function(o,k){
+    var s = o.rec - o.desp;
+    if(s < 0){ mesesDeficit++; if(s < maiorDeficit){ maiorDeficit = s; piorMes = k; } }
+  });
+
+  var poupScore = clamp(taxa/20*100, 0, 100);
+  var invScore  = clamp(invPct/10*100, 0, 100);
+  var controlScore = clamp((60 - naoEssPct)/30*100, 0, 100);
+  var health = Math.round(0.45*poupScore + 0.30*controlScore + 0.25*invScore);
+  var hColor, hLabel;
+  if(health >= 80){ hColor = C.green; hLabel = 'Excelente'; }
+  else if(health >= 60){ hColor = C.cyan; hLabel = 'Boa'; }
+  else if(health >= 40){ hColor = C.amber; hLabel = 'Atenção'; }
+  else { hColor = C.red; hLabel = 'Crítica'; }
+
+  var periodo = periodoTxtLeitura();
+  var alerts = [], tips = [];
+
+  /* --- o que precisa de atenção --- */
+  if(saldo < 0){
+    alerts.push({
+      sev:'critico', color:C.red, icon:'<path d="M3 12h4l3 8 4-16 3 8h4"/>',
+      title:'Saldo negativo em ' + periodo,
+      text:'Você gastou <b>' + fmtBRLf(totalDespesa) + '</b> contra <b>' + fmtBRLf(totalReceita) + '</b> de receita, fechando em <b>' + fmtBRLf(saldo) + '</b>. Déficit médio de <b>' + fmtBRLf(Math.abs(saldo)/nMeses) + '</b> por mês.',
+      action:'Priorize cortar os gastos não essenciais e adie compras de maior valor até voltar ao azul. Os meses com déficit aparecem listados abaixo para você entender o padrão.'
+    });
+  }
+
+  if(taxa < 20){
+    alerts.push({
+      sev: taxa < 0 ? 'critico' : 'atencao', color: taxa < 0 ? C.red : C.amber,
+      icon:'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/>',
+      title:'Poupança abaixo da meta de 20%',
+      text:'Em ' + periodo + ' você poupou <b>' + fmtPct(taxa) + '</b> da receita. O recomendado é guardar pelo menos 20% do que entra.',
+      action:'Para alcançar a meta, seria preciso poupar mais <b>' + fmtBRLf(totalReceita*0.20 - Math.max(saldo,0)) + '</b> no período — em média <b>' + fmtBRLf(Math.max((totalReceita*0.20 - Math.max(saldo,0))/nMeses, 0)) + '</b> por mês.'
+    });
+  }
+
+  if(naoEssPct > 40){
+    alerts.push({
+      sev:'atencao', color:C.amber, icon:'<path d="M3 21h18M6 21V9m6 12V4m6 17v-8"/>',
+      title:'Gastos não essenciais acima do limite saudável',
+      text:'Itens discricionários representam <b>' + fmtPct(naoEssPct) + '</b> das despesas de ' + periodo + '. O limite recomendado é 40%.',
+      action:'Reduzir ' + fmtPct(naoEssPct - 40) + ' desses gastos liberaria cerca de <b>' + fmtBRLf(totalDespesa*(naoEssPct-40)/100) + '</b> no período — dinheiro que pode ir para a reserva ou investimentos.'
+    });
+  }
+
+  if(invPct < 10){
+    alerts.push({
+      sev: invPct === 0 ? 'critico' : 'atencao', color: invPct === 0 ? C.red : C.purple,
+      icon:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>',
+      title:'Aportes em investimentos abaixo dos 10%',
+      text:'Você destinou <b>' + fmtPct(invPct) + '</b> da receita (' + fmtBRLf(totalInvest) + ') a investimentos. A recomendação é aplicar pelo menos 10% na construção de patrimônio.',
+      action:'Aportar mais <b>' + fmtBRLf(totalReceita*0.10 - totalInvest) + '</b> no período (cerca de <b>' + fmtBRLf((totalReceita*0.10 - totalInvest)/nMeses) + '</b>/mês) já coloca você na meta.'
+    });
+  }
+
+  if(despCatSorted.length && totalDespesa){
+    var top = despCatSorted[0];
+    var topPct = top[1]/totalDespesa*100;
+    if(topPct >= 40){
+      alerts.push({
+        sev: topPct >= 60 ? 'critico' : 'atencao', color: topPct >= 60 ? C.red : C.amber,
+        icon:'<path d="M4 4h7v7H4zM13 4h7v4h-7zM13 11h7v9h-7zM4 14h7v7H4z"/>',
+        title:'Concentração de gastos em "' + esc(top[0]) + '"',
+        text:'Essa categoria consumiu <b>' + fmtPct(topPct) + '</b> de tudo o que você gastou em ' + periodo + ' (' + fmtBRLf(top[1]) + ').',
+        action:'Analise se o valor é realmente necessário. Uma redução de ' + (topPct >= 60 ? '20%' : '15%') + ' ali representaria <b>' + fmtBRLf(top[1]*(topPct >= 60 ? 0.2 : 0.15)) + '</b> economizados no período.'
+      });
+    }
+  }
+
+  if(mesesDeficit > 0){
+    alerts.push({
+      sev: mesesDeficit >= Math.ceil(nMeses/2) ? 'critico' : 'atencao', color: mesesDeficit >= Math.ceil(nMeses/2) ? C.red : C.amber,
+      icon:'<path d="M12 2a10 10 0 1 0 10 10M12 2v10h10"/>',
+      title: mesesDeficit + ' mês(es) com saldo negativo',
+      text:'Em <b>' + mesesDeficit + '</b> de ' + nMeses + ' mês(es) analisado(s), as despesas superaram a receita' + (piorMes ? ' — o pior foi ' + MESES_FULL[parseInt(piorMes.slice(5,7),10)-1] + '/' + piorMes.slice(0,4) + ' com <b>' + fmtBRLf(maiorDeficit) + '</b>' : '') + '.',
+      action:'Identifique o que aconteceu nesses meses (impostos, compras sazonais, emergências) e crie uma reserva mensal para suavizar o impacto no orçamento.'
+    });
+  }
+
+  if(health < 60){
+    alerts.push({
+      sev: health < 40 ? 'critico' : 'atencao', color: health < 40 ? C.red : C.amber,
+      icon:'<path d="M12 2v6M12 16v6M4.9 4.9l4.2 4.2M14.9 14.9l4.2 4.2M2 12h6M16 12h6M4.9 19.1l4.2-4.2M14.9 9.1l4.2-4.2"/>',
+      title:'Saúde financeira em nível ' + hLabel.toLowerCase() + ' (' + health + '/100)',
+      text:'O índice pondera poupança (45%), controle de não essenciais (30%) e aportes (25%). Em ' + periodo + ', o resultado foi <b>' + health + '/100</b>.',
+      action:'Os pontos que mais pesam agora são ' + (taxa < 20 ? 'elevar a taxa de poupança' : 'a consistência dos investimentos') + '. Foque neles antes de outros ajustes.'
+    });
+  }
+
+  /* --- dicas para melhorar --- */
+  if(avgDesp > 0){
+    tips.push({ color:C.green, icon:'<path d="M12 2v6M12 16v6M4.9 4.9l4.2 4.2M14.9 14.9l4.2 4.2M2 12h6M16 12h6M4.9 19.1l4.2-4.2M14.9 9.1l4.2-4.2"/>',
+      title:'Construa sua reserva de emergência',
+      text:'O ideal é ter de <b>3 a 6 vezes</b> a despesa mensal guardados em algo líquido. Com despesa média de <b>' + fmtBRLf(avgDesp) + '</b>/mês, mire em uma reserva entre <b>' + fmtBRLf(avgDesp*3) + '</b> e <b>' + fmtBRLf(avgDesp*6) + '</b> antes de aumentar o risco dos investimentos.'
+    });
+  }
+  if(naoEssPct > 25){
+    tips.push({ color:C.cyan, icon:'<path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/>',
+      title:'Revise assinaturas e gastos fixos',
+      text:'Pequenos valores recorrentes (streaming, apps, planos, mensalidades) somam silenciosamente. Listar os fixos mensais e questionar cada um pode liberar dezenas de reais por mês sem abrir mão do essencial.'
+    });
+  }
+  if(invPct < 10){
+    tips.push({ color:C.purple, icon:'<path d="M3 21h18M6 21V9m6 12V4m6 17v-8"/>',
+      title:'Automatize o aporte mensal',
+      text:'Configure uma transferência automática de <b>' + fmtBRLf(avgRec*0.10) + '</b>/mês (10% da receita média) assim que a renda entrar — invista primeiro e viva com o restante.'
+    });
+  }
+  if(despCatSorted.length && totalDespesa){
+    var top2 = despCatSorted[0];
+    var top2Pct = top2[1]/totalDespesa*100;
+    if(top2Pct >= 40){
+      tips.push({ color:C.amber, icon:'<path d="M4 6h16M4 12h16M4 18h16"/>',
+        title:'Crie um teto para "' + esc(top2[0]) + '"',
+        text:'Com <b>' + fmtPct(top2Pct) + '</b> das despesas concentradas em ' + esc(top2[0]) + ' (' + fmtBRLf(top2[1]) + '), defina um valor máximo mensal para essa categoria e acompanhe na aba Planejamento.'
+      });
+    }
+  }
+  tips.push({ color:C.cyan, icon:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>',
+    title:'Aplique a regra 50/30/20',
+    text:'Divida a receita em 50% para necessidades, 30% para desejos e 20% para poupar e investir. Com receita média de <b>' + fmtBRLf(avgRec) + '</b>/mês, seu teto de desejos seria <b>' + fmtBRLf(avgRec*0.30) + '</b> e a poupança-alvo <b>' + fmtBRLf(avgRec*0.20) + '</b>.'
+  });
+  if(!alerts.length){
+    tips.push({ color:C.green, icon:'<path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/>',
+      title:'Mantenha a constância — está indo muito bem',
+      text:'Nenhum ponto crítico foi identificado no período. Continue registrando os lançamentos com frequência e revise suas metas a cada trimestre para proteger o bom resultado.'
+    });
+  }
+
+  var sevCount = alerts.length ? alerts.filter(function(a){ return a.sev === 'critico'; }).length : 0;
+  document.getElementById('leituraSub').textContent = 'Leitura automática gerada a partir dos dados de ' + periodo + ' — apenas o que precisa de atenção e como resolver.';
+
+  document.getElementById('leituraSummary').innerHTML =
+    '<div class="leitura-sum-card">' +
+      '<div class="leitura-sum-top"><div class="leitura-sum-label">Saúde financeira</div>' +
+      '<div class="leitura-sum-icon" style="background:'+hexA(hColor,0.12)+';border:1px solid '+hexA(hColor,0.35)+';color:'+hColor+'"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg></div></div>' +
+      '<div class="leitura-sum-value" style="color:'+hColor+'">'+health+'/100</div>' +
+      '<div class="leitura-sum-foot">'+hLabel+' · poupança de '+fmtPct(taxa)+'</div>' +
+      '<div class="leitura-sum-bar"><i style="width:'+health+'%;background:'+hColor+';color:'+hColor+'"></i></div>' +
+    '</div>' +
+    '<div class="leitura-sum-card">' +
+      '<div class="leitura-sum-top"><div class="leitura-sum-label">Pontos de atenção</div>' +
+      '<div class="leitura-sum-icon" style="background:'+(alerts.length?hexA(C.red,0.12):hexA(C.green,0.12))+';border:1px solid '+(alerts.length?hexA(C.red,0.35):hexA(C.green,0.35))+';color:'+(alerts.length?C.red:C.green)+'"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></div></div>' +
+      '<div class="leitura-sum-value" style="color:'+(alerts.length?C.red:C.green)+'">'+(alerts.length ? alerts.length : 'Nenhum')+'</div>' +
+      '<div class="leitura-sum-foot">'+(alerts.length ? (sevCount ? sevCount+' crítico(s) · '+(alerts.length-sevCount)+' atenção' : 'Todos em nível de atenção') : 'Nada exige correção no período')+'</div>' +
+    '</div>' +
+    '<div class="leitura-sum-card">' +
+      '<div class="leitura-sum-top"><div class="leitura-sum-label">Dicas geradas</div>' +
+      '<div class="leitura-sum-icon" style="background:'+hexA(C.cyan,0.12)+';border:1px solid '+hexA(C.cyan,0.35)+';color:'+C.cyan+'"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18h.01M12 14a4 4 0 0 0 2.5-7.1A4.5 4.5 0 0 0 7.6 5.6 4 4 0 0 0 12 14z"/><path d="M9 18h6"/></svg></div></div>' +
+      '<div class="leitura-sum-value" style="color:'+C.cyan+'">'+tips.length+'</div>' +
+      '<div class="leitura-sum-foot">Recomendações práticas com base nos seus resultados</div>' +
+    '</div>';
+
+  document.getElementById('leituraAlertasSub').textContent = alerts.length
+    ? 'Problemas identificados nos seus números de ' + periodo + ' — cada um com a ação sugerida para resolver.'
+    : 'Nenhum problema identificado nos seus números de ' + periodo + '.';
+  document.getElementById('leituraAlertas').innerHTML = alerts.length
+    ? alerts.map(leituraAlertCard).join('')
+    : '<div class="leitura-ok"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><path d="M22 4L12 14l-3-3"/></svg><div><b>Tudo certo por aqui.</b> Nenhum ponto de atenção foi identificado nas suas finanças no período — siga mantendo o controle e acompanhe as dicas abaixo para evoluir ainda mais.</div></div>';
+
+  document.getElementById('leituraDicasSub').textContent = 'Como melhorar seus resultados de ' + periodo + ' com ações concretas e mensuráveis.';
+  document.getElementById('leituraDicas').innerHTML = tips.map(leituraTipCard).join('');
 }
 
 /* ================= TRANSAÇÕES (tabela) ================= */
@@ -2438,6 +3320,21 @@ document.getElementById('goalReserva').addEventListener('change', function(){
   saveGoals(); render();
 });
 
+['projSaldoIni','projRecCresc','projDespCresc','projAporte','projTaxa','projHorizonte'].forEach(function(id){
+  var el = document.getElementById(id);
+  if(el) el.addEventListener('change', function(){ render(); });
+});
+
+document.querySelectorAll('#projSeg .seg-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('#projSeg .seg-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    PROJ_MODE = btn.getAttribute('data-mode');
+    if(charts.proj){ try{ charts.proj.destroy(); }catch(e){} delete charts.proj; }
+    render();
+  });
+});
+
 var themeBtn = document.getElementById('themeBtn');
 var themeMenu = document.getElementById('themeMenu');
 if(themeBtn && themeMenu){
@@ -2454,6 +3351,641 @@ if(themeBtn && themeMenu){
   document.addEventListener('click', function(){ themeMenu.classList.remove('open'); });
 }
 
+/* ================= PLANEJAMENTO DE GASTOS ================= */
+var PLAN_KEY = 'neonPlanejamento';
+function defaultPlan(){
+  return { ano:new Date().getFullYear(), rows:[
+    { cat:'Alimentação', sub:'Supermercado', classe:'Essencial', meses:[0,0,0,0,0,0,0,0,0,0,0,0] }
+  ], rec:[], inv:[] };
+}
+function loadPlan(){
+  try{
+    var p = JSON.parse(localStorage.getItem(PLAN_KEY));
+    if(p && typeof p === 'object' && Array.isArray(p.rows)){
+      var recArr = [], invArr = [];
+      p.rows = p.rows.filter(function(r){
+        if(!r || typeof r !== 'object' || !Array.isArray(r.meses)) return false;
+        var c = String(r.cat||'').trim().toLowerCase();
+        if(c === 'receita'){ recArr.push({ sub:r.sub||'', meses:r.meses }); return false; }
+        if(c === 'investimento'){ invArr.push({ sub:r.sub||'', meses:r.meses }); return false; }
+        return !!(r.cat || r.sub);
+      });
+      if(!Array.isArray(p.rec)) p.rec = [];
+      if(!Array.isArray(p.inv)) p.inv = [];
+      p.rec = p.rec.concat(recArr);
+      p.inv = p.inv.concat(invArr);
+      return p;
+    }
+  }catch(e){}
+  return defaultPlan();
+}
+function savePlan(){ try{ localStorage.setItem(PLAN_KEY, JSON.stringify(plan)); }catch(e){} }
+var plan = loadPlan();
+
+function planRowTotal(r){ return r.meses.reduce(function(a,b){ return a + (+b||0); }, 0); }
+function planAllTotals(){
+  var t = [0,0,0,0,0,0,0,0,0,0,0,0];
+  plan.rows.forEach(function(r){ for(var i = 0; i < 12; i++) t[i] += (+r.meses[i]||0); });
+  return { months:t, total:t.reduce(function(a,b){ return a + b; }, 0) };
+}
+function planCatTotals(cat){
+  var t = [0,0,0,0,0,0,0,0,0,0,0,0];
+  plan.rows.forEach(function(r){ if(r.cat === cat){ for(var i = 0; i < 12; i++) t[i] += (+r.meses[i]||0); } });
+  return t;
+}
+
+function parsePlanGviz(resp){
+  var table = resp && resp.table;
+  if(!table || !table.rows) return { gasto:[], rec:[], inv:[] };
+  var idx = {};
+  table.cols.forEach(function(c, i){ idx[String(c.label||'').trim().toLowerCase()] = i; });
+  var iCat = idx['categoria'], iSub = idx['subcategoria'], iCls = idx['classificação'];
+  var monthIdx = [];
+  for(var mi = 0; mi < 12; mi++) monthIdx.push(idx[MESES_ABREV[mi].toLowerCase()]);
+  var out = { gasto:[], rec:[], inv:[] };
+  table.rows.forEach(function(row){
+    function cell(i){ return (row.c && row.c[i]) ? row.c[i].v : null; }
+    var cat = cell(iCat), sub = cell(iSub);
+    if(cat === null && sub === null) return;
+    cat = cat == null ? '' : String(cat).trim();
+    sub = sub == null ? '' : String(sub).trim();
+    if(!cat && !sub) return;
+    var meses = monthIdx.map(function(i){ var v = parseFloat(cell(i)); return isNaN(v) ? 0 : v; });
+    var classe = cell(iCls);
+    if(classe != null) classe = String(classe).trim();
+    if(classe !== 'Não essencial' && classe !== 'Nao essencial') classe = 'Essencial';
+    var catLow = cat.toLowerCase();
+    if(catLow === 'receita'){
+      out.rec.push({ sub:sub, meses:meses });
+    } else if(catLow === 'investimento'){
+      out.inv.push({ sub:sub, meses:meses });
+    } else {
+      out.gasto.push({ cat:cat, sub:sub, classe:classe, meses:meses });
+    }
+  });
+  return out;
+}
+
+function renderPlanTable(){
+  var body = document.getElementById('planBody');
+  var rows = '', prevCat = null;
+  plan.rows.forEach(function(r, ri){
+    if(r.cat !== prevCat){
+      var cTot = planCatTotals(r.cat).reduce(function(a,b){ return a + b; }, 0);
+      rows += '<tr class="plan-cat"><td colspan="16">' +
+        '<input class="plan-cat-name-input" data-cat="' + ri + '" value="' + esc(r.cat) + '">' +
+        '<span class="plan-cat-total">saldo ' + fmtBRL(cTot) + '/ano</span>' +
+        '<button class="plan-add-sub" data-addsub="' + ri + '" title="Adicionar subcategoria">+ sub</button>' +
+        '<button class="plan-del plan-del-cat" data-delcat="' + ri + '" title="Excluir categoria">×</button>' +
+        '</td></tr>';
+      prevCat = r.cat;
+    }
+    var cls = (r.classe === 'Não essencial' || r.classe === 'Nao essencial') ? 'Não essencial' : 'Essencial';
+    var tot = planRowTotal(r);
+    rows += '<tr>' +
+      '<td><input class="plan-text" data-sub="' + ri + '" value="' + esc(r.sub) + '"></td>' +
+      '<td><select class="plan-classe" data-classe="' + ri + '">' +
+        '<option value="Essencial"' + (cls === 'Essencial' ? ' selected' : '') + '>Essencial</option>' +
+        '<option value="Não essencial"' + (cls === 'Não essencial' ? ' selected' : '') + '>Não essencial</option>' +
+        '</select></td>';
+    for(var m = 0; m < 12; m++){
+      var v = r.meses[m];
+      rows += '<td><input class="plan-month" data-row="' + ri + '" data-m="' + m + '" type="number" min="0" step="0.01" value="' + (v ? v : '') + '"></td>';
+    }
+    rows += '<td class="plan-tot">' + fmtBRL(tot) + '</td>' +
+      '<td><button class="plan-del" data-del="' + ri + '" title="Excluir subcategoria">×</button></td></tr>';
+  });
+  body.innerHTML = rows || '<tr><td colspan="16" class="plan-empty"><b>Nenhuma categoria ainda.</b> Clique em "+ Nova categoria" para começar a planejar.</td></tr>';
+  updatePlanTotals();
+  updatePlanSummary();
+  renderPlanRecTable();
+  renderPlanInvTable();
+}
+
+function updatePlanTotals(){
+  var all = planAllTotals();
+  Array.prototype.forEach.call(document.querySelectorAll('#planFoot .plan-mtotal'), function(td, i){
+    td.textContent = fmtBRL(all.months[i]);
+  });
+  document.getElementById('planTotalGeral').textContent = fmtBRL(all.total);
+}
+
+function planRecRowTotal(r){ return r.meses.reduce(function(a,b){ return a + (+b||0); }, 0); }
+function updatePlanRecTotals(){
+  var t = planRecTotals();
+  Array.prototype.forEach.call(document.querySelectorAll('#planRecFoot .plan-mtotal'), function(td, i){
+    td.textContent = fmtBRL(t[i]);
+  });
+  var el = document.getElementById('planRecTotalGeral');
+  if(el) el.textContent = fmtBRL(t.reduce(function(a,b){ return a + b; }, 0));
+}
+function renderPlanRecTable(){
+  var body = document.getElementById('planRecBody');
+  if(!body) return;
+  var rows = '';
+  (plan.rec||[]).forEach(function(r, ri){
+    var tot = planRecRowTotal(r);
+    rows += '<tr>' +
+      '<td><input class="plan-text plan-rec-sub" data-rec="' + ri + '" value="' + esc(r.sub) + '"></td>' +
+      '<td></td>';
+    for(var m = 0; m < 12; m++){
+      var v = r.meses[m];
+      rows += '<td><input class="plan-rec-month" data-rec="' + ri + '" data-m="' + m + '" type="number" min="0" step="0.01" value="' + (v ? v : '') + '"></td>';
+    }
+    rows += '<td class="plan-tot">' + fmtBRL(tot) + '</td>' +
+      '<td><button class="plan-del" data-delrec="' + ri + '" title="Excluir receita">×</button></td></tr>';
+  });
+  body.innerHTML = rows || '<tr><td colspan="16" class="plan-empty"><b>Nenhuma receita planejada.</b> Clique em "+ Nova receita" para lançar.</td></tr>';
+  updatePlanRecTotals();
+}
+
+function planInvRowTotal(r){ return r.meses.reduce(function(a,b){ return a + (+b||0); }, 0); }
+function updatePlanInvTotals(){
+  var t = planInvTotals();
+  Array.prototype.forEach.call(document.querySelectorAll('#planInvFoot .plan-mtotal'), function(td, i){
+    td.textContent = fmtBRL(t[i]);
+  });
+  var el = document.getElementById('planInvTotalGeral');
+  if(el) el.textContent = fmtBRL(t.reduce(function(a,b){ return a + b; }, 0));
+}
+function renderPlanInvTable(){
+  var body = document.getElementById('planInvBody');
+  if(!body) return;
+  var rows = '';
+  (plan.inv||[]).forEach(function(r, ri){
+    var tot = planInvRowTotal(r);
+    rows += '<tr>' +
+      '<td><input class="plan-text plan-inv-sub" data-inv="' + ri + '" value="' + esc(r.sub) + '"></td>' +
+      '<td></td>';
+    for(var m = 0; m < 12; m++){
+      var v = r.meses[m];
+      rows += '<td><input class="plan-inv-month" data-inv="' + ri + '" data-m="' + m + '" type="number" min="0" step="0.01" value="' + (v ? v : '') + '"></td>';
+    }
+    rows += '<td class="plan-tot">' + fmtBRL(tot) + '</td>' +
+      '<td><button class="plan-del" data-delinv="' + ri + '" title="Excluir investimento">×</button></td></tr>';
+  });
+  body.innerHTML = rows || '<tr><td colspan="16" class="plan-empty"><b>Nenhum investimento planejado.</b> Clique em "+ Novo investimento" para lançar.</td></tr>';
+  updatePlanInvTotals();
+}
+
+function planRecTotals(){
+  var t = [0,0,0,0,0,0,0,0,0,0,0,0];
+  (plan.rec||[]).forEach(function(r){ for(var i = 0; i < 12; i++) t[i] += (+r.meses[i]||0); });
+  return t;
+}
+function planInvTotals(){
+  var t = [0,0,0,0,0,0,0,0,0,0,0,0];
+  (plan.inv||[]).forEach(function(r){ for(var i = 0; i < 12; i++) t[i] += (+r.meses[i]||0); });
+  return t;
+}
+
+function updatePlanSummary(){
+  var all = planAllTotals(), total = all.total;
+  var essencial = 0, naoEssencial = 0;
+  plan.rows.forEach(function(r){
+    var t = planRowTotal(r);
+    if(r.classe === 'Não essencial' || r.classe === 'Nao essencial') naoEssencial += t; else essencial += t;
+  });
+  var rec = planRecTotals();
+  var rTot = rec.reduce(function(a,b){ return a + b; }, 0);
+  var result = [], pos = 0, neg = 0;
+  for(var i = 0; i < 12; i++){
+    var d = rec[i] - all.months[i];
+    result.push(d);
+    if(d > 0.005) pos++; else if(d < -0.005) neg++;
+  }
+  var anoTotal = result.reduce(function(a,b){ return a + b; }, 0);
+  document.getElementById('planSummary').innerHTML =
+    projCard('Total previsto', fmtBRL(rTot), '#DAA520', 'receita prevista · média de ' + fmtBRL(rTot/12) + '/mês') +
+    projCard('Gastos', fmtBRL(total), C.red, 'gastos previstos · média de ' + fmtBRL(total/12) + '/mês') +
+    projCard('Saldo total', fmtBRL(anoTotal), C.blue, anoTotal >= 0 ? 'sobra — disponível para investir' : 'déficit no ano') +
+    projCard('Meses com sobra', pos + ' positivos · ' + neg + ' negativos', pos >= neg ? C.amber : C.red, 'essenciais ' + fmtBRL(essencial) + ' · não essenciais ' + fmtBRL(naoEssencial));
+}
+
+function updatePlanChart(){
+  var gastos = planAllTotals().months;
+  var rec = planRecTotals();
+  var saldo = [];
+  for(var i = 0; i < 12; i++) saldo.push(round2(rec[i] - gastos[i]));
+  var darkYellow = '#DAA520';
+  var ds = [
+    { type:'bar', label:'Total previsto', data:rec, backgroundColor:hexA(darkYellow, 0.75), borderColor:darkYellow, borderWidth:1, borderRadius:4, yAxisID:'y', maxBarThickness:22 },
+    { type:'bar', label:'Gastos', data:gastos, backgroundColor:hexA(C.red, 0.7), borderColor:C.red, borderWidth:1, borderRadius:4, yAxisID:'y', maxBarThickness:22 },
+    { type:'line', label:'Saldo', data:saldo, borderColor:C.blue, backgroundColor:C.blue, tension:.3, borderWidth:2.6, yAxisID:'y1', order:1, neonGlow:true, glowColor:C.blue, pointRadius:2.5, pointHoverRadius:6, pointBackgroundColor:C.blue, pointBorderColor:C.blue }
+  ];
+  var chart = charts.planComp;
+  if(!chart){
+    charts.planComp = new Chart(document.getElementById('chartPlanComp'), {
+      type:'bar',
+      data:{ labels:MESES_ABREV.slice(), datasets:ds },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        interaction:{ mode:'index', intersect:false },
+        plugins:{ legend:{ labels:{ color:C.dim, font:{size:11, weight:600}, boxWidth:9, boxHeight:9, padding:11 } },
+          tooltip:{ backgroundColor:CHART.bg, borderColor:'rgba(37,244,255,0.35)', borderWidth:1, padding:12, titleFont:{weight:600}, bodyFont:{size:12},
+            callbacks:{ label:function(c2){ return ' ' + c2.dataset.label + ': ' + fmtBRLf(c2.parsed.y); } } } },
+        scales:{
+          x:{ grid:{display:false}, ticks:{font:{size:10}} },
+          y:{ position:'left', grid:{color:CHART.grid}, ticks:{callback:function(v){ return fmtBRL(v); }, font:{size:10}} },
+          y1:{ position:'right', grid:{display:false}, ticks:{callback:function(v){ return fmtBRL(v); }, font:{size:10}} }
+        }
+      }
+    });
+  } else {
+    chart.data.datasets[0].data = rec;
+    chart.data.datasets[1].data = gastos;
+    chart.data.datasets[2].data = saldo;
+    chart.update();
+  }
+}
+
+function updatePlanInvChart(){
+  var prev = planInvTotals();
+  var real = [0,0,0,0,0,0,0,0,0,0,0,0];
+  var ano = String(plan.ano || '');
+  RAW.forEach(function(r){
+    if(r.tipo !== 'Investimento') return;
+    var ay = (r.ano && r.ano !== 'null') ? r.ano : (r.d ? r.d.slice(0,4) : '');
+    if(ay !== ano) return;
+    var mm = r.d ? parseInt(r.d.slice(5,7),10) : parseInt(r.mes,10);
+    if(mm >= 1 && mm <= 12) real[mm-1] += r.v;
+  });
+  var ds = [
+    { type:'bar', label:'Planejado para investir', data:prev, backgroundColor:hexA(C.purple, 0.65), borderColor:hexA(C.purple, 0.9), borderWidth:1, borderRadius:4, maxBarThickness:22 },
+    { type:'bar', label:'Valor realizado', data:real, backgroundColor:hexA(C.cyan, 0.65), borderColor:hexA(C.cyan, 0.9), borderWidth:1, borderRadius:4, maxBarThickness:22 }
+  ];
+  var chart = charts.planInv;
+  if(!chart){
+    charts.planInv = new Chart(document.getElementById('chartPlanInv'), {
+      type:'bar',
+      data:{ labels:MESES_ABREV.slice(), datasets:ds },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        interaction:{ mode:'index', intersect:false },
+        plugins:{ legend:{ labels:{ color:C.dim, font:{size:11, weight:600}, boxWidth:9, boxHeight:9, padding:11 } },
+          tooltip:{ backgroundColor:CHART.bg, borderColor:'rgba(157,92,255,0.35)', borderWidth:1, padding:12, titleFont:{weight:600}, bodyFont:{size:12},
+            callbacks:{ label:function(c2){ return ' ' + c2.dataset.label + ': ' + fmtBRLf(c2.parsed.y); } } } },
+        scales:{
+          x:{ grid:{display:false}, ticks:{font:{size:10}} },
+          y:{ grid:{color:CHART.grid}, ticks:{callback:function(v){ return fmtBRL(v); }, font:{size:10}} }
+        }
+      }
+    });
+  } else {
+    chart.data.datasets[0].data = prev;
+    chart.data.datasets[1].data = real;
+    chart.update();
+  }
+}
+
+function planMonthInput(el){
+  var ri = parseInt(el.getAttribute('data-row'), 10);
+  var m = parseInt(el.getAttribute('data-m'), 10);
+  var r = plan.rows[ri];
+  if(!r) return;
+  var v = parseFloat(el.value);
+  r.meses[m] = isNaN(v) ? 0 : v;
+  savePlan();
+  var row = el.closest('tr');
+  if(row) row.querySelector('.plan-tot').textContent = fmtBRL(planRowTotal(r));
+  updatePlanTotals();
+  updatePlanSummary();
+  updatePlanChart();
+  updatePlanInvChart();
+}
+function planRenameSub(el){
+  var ri = parseInt(el.getAttribute('data-sub'), 10);
+  var r = plan.rows[ri];
+  if(!r) return;
+  r.sub = el.value;
+  savePlan();
+}
+function planClasseChange(el){
+  var ri = parseInt(el.getAttribute('data-classe'), 10);
+  var r = plan.rows[ri];
+  if(!r) return;
+  r.classe = el.value;
+  savePlan();
+  renderPlanTable();
+}
+function planRenameCat(el){
+  var ri = parseInt(el.getAttribute('data-cat'), 10);
+  var r = plan.rows[ri];
+  if(!r) return;
+  var name = el.value.trim();
+  if(!name){ el.value = r.cat; return; }
+  plan.rows.forEach(function(x){ if(x.cat === r.cat) x.cat = name; });
+  savePlan();
+  renderPlanTable();
+}
+function planAddCategoria(){
+  var n = 1, base = 'Nova categoria';
+  var names = plan.rows.map(function(r){ return r.cat; });
+  while(names.indexOf(base + (n === 1 ? '' : ' ' + n)) !== -1) n++;
+  var cat = base + (n === 1 ? '' : ' ' + n);
+  plan.rows.push({ cat:cat, sub:'Subcategoria', classe:'Essencial', meses:[0,0,0,0,0,0,0,0,0,0,0,0] });
+  savePlan();
+  renderPlanTable();
+}
+function planAddSub(catIndex){
+  var cat = plan.rows[catIndex].cat;
+  var n = 1, base = 'Subcategoria';
+  var subs = plan.rows.filter(function(r){ return r.cat === cat; }).map(function(r){ return r.sub; });
+  while(subs.indexOf(base + (n === 1 ? '' : ' ' + n)) !== -1) n++;
+  plan.rows.splice(catIndex + 1, 0, { cat:cat, sub:base + (n === 1 ? '' : ' ' + n), classe:'Essencial', meses:[0,0,0,0,0,0,0,0,0,0,0,0] });
+  savePlan();
+  renderPlanTable();
+}
+function planDelRow(ri){
+  if(plan.rows.length === 1){ toast('Não é possível excluir a única subcategoria.'); return; }
+  plan.rows.splice(ri, 1);
+  savePlan();
+  renderPlanTable();
+}
+function planDelCat(catIndex){
+  var cat = plan.rows[catIndex].cat;
+  plan.rows = plan.rows.filter(function(r){ return r.cat !== cat; });
+  savePlan();
+  renderPlanTable();
+}
+function planRecMonthInput(el){
+  var ri = parseInt(el.getAttribute('data-rec'), 10);
+  var m = parseInt(el.getAttribute('data-m'), 10);
+  var r = (plan.rec||[])[ri];
+  if(!r) return;
+  var v = parseFloat(el.value);
+  r.meses[m] = isNaN(v) ? 0 : v;
+  savePlan();
+  var row = el.closest('tr');
+  if(row) row.querySelector('.plan-tot').textContent = fmtBRL(planRecRowTotal(r));
+  updatePlanRecTotals();
+  updatePlanSummary();
+  updatePlanChart();
+}
+function planRecRename(el){
+  var ri = parseInt(el.getAttribute('data-rec'), 10);
+  var r = (plan.rec||[])[ri];
+  if(!r) return;
+  r.sub = el.value;
+  savePlan();
+}
+function planRecAdd(){
+  if(!Array.isArray(plan.rec)) plan.rec = [];
+  var n = 1, base = 'Nova receita';
+  var subs = plan.rec.map(function(r){ return r.sub; });
+  while(subs.indexOf(base + (n === 1 ? '' : ' ' + n)) !== -1) n++;
+  plan.rec.push({ sub:base + (n === 1 ? '' : ' ' + n), meses:[0,0,0,0,0,0,0,0,0,0,0,0] });
+  savePlan();
+  renderPlanRecTable();
+  updatePlanSummary();
+  updatePlanChart();
+}
+function planRecDel(ri){
+  if((plan.rec||[]).length === 1){ toast('Não é possível excluir a única receita.'); return; }
+  plan.rec.splice(ri, 1);
+  savePlan();
+  renderPlanRecTable();
+  updatePlanSummary();
+  updatePlanChart();
+}
+function planInvMonthInput(el){
+  var ri = parseInt(el.getAttribute('data-inv'), 10);
+  var m = parseInt(el.getAttribute('data-m'), 10);
+  var r = (plan.inv||[])[ri];
+  if(!r) return;
+  var v = parseFloat(el.value);
+  r.meses[m] = isNaN(v) ? 0 : v;
+  savePlan();
+  var row = el.closest('tr');
+  if(row) row.querySelector('.plan-tot').textContent = fmtBRL(planInvRowTotal(r));
+  updatePlanInvTotals();
+  updatePlanInvChart();
+}
+function planInvRename(el){
+  var ri = parseInt(el.getAttribute('data-inv'), 10);
+  var r = (plan.inv||[])[ri];
+  if(!r) return;
+  r.sub = el.value;
+  savePlan();
+}
+function planInvAdd(){
+  if(!Array.isArray(plan.inv)) plan.inv = [];
+  var n = 1, base = 'Novo investimento';
+  var subs = plan.inv.map(function(r){ return r.sub; });
+  while(subs.indexOf(base + (n === 1 ? '' : ' ' + n)) !== -1) n++;
+  plan.inv.push({ sub:base + (n === 1 ? '' : ' ' + n), meses:[0,0,0,0,0,0,0,0,0,0,0,0] });
+  savePlan();
+  renderPlanInvTable();
+  updatePlanInvChart();
+}
+function planInvDel(ri){
+  if((plan.inv||[]).length === 1){ toast('Não é possível excluir o único investimento.'); return; }
+  plan.inv.splice(ri, 1);
+  savePlan();
+  renderPlanInvTable();
+  updatePlanInvChart();
+}
+function importPlanejamento(){
+  if(!app.sheetId){
+    toast('Conecte uma planilha primeiro (aba Importação).');
+    return;
+  }
+  var btn = document.getElementById('planImport');
+  btn.disabled = true;
+  gvizLoad(app.sheetId, 'Planejamento', function(err, data){
+    btn.disabled = false;
+    if(err){
+      toast('Não foi possível ler a aba "Planejamento" da planilha.');
+      return;
+    }
+    var p = parsePlanGviz(data);
+    var nTotal = p.gasto.length + p.rec.length + p.inv.length;
+    if(!nTotal){
+      toast('A aba "Planejamento" está vazia ou não existe.');
+      return;
+    }
+    plan.ano = parseInt(document.getElementById('planAno').value, 10) || new Date().getFullYear();
+    plan.rows = p.gasto;
+    plan.rec = p.rec;
+    plan.inv = p.inv;
+    savePlan();
+    renderPlanTable();
+    renderPlanRecTable();
+    renderPlanInvTable();
+    updatePlanChart();
+    updatePlanInvChart();
+    toast('Planejamento importado: ' + p.gasto.length + ' gasto(s) + ' + p.rec.length + ' receita(s) em ' + plan.ano + '.');
+  });
+}
+function toast(msg){
+  var t = document.getElementById('toastMsg');
+  if(!t){
+    t = document.createElement('div');
+    t.className = 'toast';
+    t.id = 'toastMsg';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(function(){ t.classList.remove('show'); }, 3600);
+}
+function initPlanejamento(){
+  var body = document.getElementById('planBody');
+  if(!body) return;
+  document.getElementById('planAno').value = plan.ano;
+  document.getElementById('planAno').addEventListener('change', function(){
+    var v = parseInt(this.value, 10);
+    if(isNaN(v) || v < 1900 || v > 2100){ this.value = plan.ano; return; }
+    plan.ano = v;
+    savePlan();
+    renderPlanTable();
+    updatePlanChart();
+    updatePlanInvChart();
+  });
+  document.getElementById('planAddCat').addEventListener('click', planAddCategoria);
+  document.getElementById('planImport').addEventListener('click', importPlanejamento);
+  body.addEventListener('input', function(ev){
+    if(ev.target.classList.contains('plan-month')) planMonthInput(ev.target);
+  });
+  body.addEventListener('change', function(ev){
+    var t = ev.target;
+    if(t.classList.contains('plan-month')) planMonthInput(t);
+    else if(t.classList.contains('plan-sub')) planRenameSub(t);
+    else if(t.classList.contains('plan-classe')) planClasseChange(t);
+    else if(t.classList.contains('plan-cat-name-input')) planRenameCat(t);
+  });
+  body.addEventListener('click', function(ev){
+    var t = ev.target;
+    if(t.classList.contains('plan-add-sub')) planAddSub(parseInt(t.getAttribute('data-addsub'),10));
+    else if(t.classList.contains('plan-del-cat')) planDelCat(parseInt(t.getAttribute('data-delcat'),10));
+    else if(t.classList.contains('plan-del')) planDelRow(parseInt(t.getAttribute('data-del'),10));
+  });
+  var recBtn = document.getElementById('planRecAdd');
+  var recBody = document.getElementById('planRecBody');
+  if(recBtn && recBody){
+    recBtn.addEventListener('click', planRecAdd);
+    recBody.addEventListener('input', function(ev){
+      if(ev.target.classList.contains('plan-rec-month')) planRecMonthInput(ev.target);
+    });
+    recBody.addEventListener('change', function(ev){
+      var t = ev.target;
+      if(t.classList.contains('plan-rec-month')) planRecMonthInput(t);
+      else if(t.classList.contains('plan-rec-sub')) planRecRename(t);
+    });
+    recBody.addEventListener('click', function(ev){
+      var t = ev.target;
+      if(t.classList.contains('plan-del') && t.hasAttribute('data-delrec')) planRecDel(parseInt(t.getAttribute('data-delrec'),10));
+    });
+  }
+  var invBtn = document.getElementById('planInvAdd');
+  var invBody = document.getElementById('planInvBody');
+  if(invBtn && invBody){
+    invBtn.addEventListener('click', planInvAdd);
+    invBody.addEventListener('input', function(ev){
+      if(ev.target.classList.contains('plan-inv-month')) planInvMonthInput(ev.target);
+    });
+    invBody.addEventListener('change', function(ev){
+      var t = ev.target;
+      if(t.classList.contains('plan-inv-month')) planInvMonthInput(t);
+      else if(t.classList.contains('plan-inv-sub')) planInvRename(t);
+    });
+    invBody.addEventListener('click', function(ev){
+      var t = ev.target;
+      if(t.classList.contains('plan-del') && t.hasAttribute('data-delinv')) planInvDel(parseInt(t.getAttribute('data-delinv'),10));
+    });
+  }
+  renderPlanTable();
+  updatePlanChart();
+  updatePlanInvChart();
+}
+
+/* ================= SIDEBAR / PÁGINAS ================= */
+var PAGES = ['dashboard','receitas','lancamentos','metas','projecoes','planejamento','leitura','importacao'];
+function isMobile(){ return window.innerWidth <= 900; }
+function drawerOpen(){ return document.body.classList.contains('side-mobile-open'); }
+function setDrawer(open){
+  document.body.classList.toggle('side-mobile-open', open);
+  var sb = document.getElementById('sidebar');
+  if(sb) sb.classList.toggle('open', open);
+}
+function persistCollapsed(collapsed){
+  try{ localStorage.setItem('neonSidebarCollapsed', collapsed ? '1' : '0'); }catch(e){}
+}
+function collapseSidebar(){
+  if(isMobile()) setDrawer(false);
+  else { document.body.classList.add('side-collapsed'); persistCollapsed(true); }
+}
+function expandSidebar(){
+  if(isMobile()) setDrawer(true);
+  else { document.body.classList.remove('side-collapsed'); persistCollapsed(false); }
+}
+function currentPage(){
+  try{ var p = localStorage.getItem('neonPage'); if(PAGES.indexOf(p) !== -1) return p; }catch(e){}
+  return 'dashboard';
+}
+function setPage(name, quiet){
+  if(PAGES.indexOf(name) === -1) name = 'dashboard';
+  Array.prototype.forEach.call(document.querySelectorAll('.page'), function(s){
+    s.classList.toggle('active', s.getAttribute('data-page') === name);
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('.side-btn'), function(b){
+    b.classList.toggle('active', b.getAttribute('data-page') === name);
+  });
+  var fb = document.getElementById('filterBar');
+  if(fb) fb.classList.toggle('hidden', name === 'importacao' || name === 'planejamento');
+  window.scrollTo(0, 0);
+  if(!quiet){ try{ localStorage.setItem('neonPage', name); }catch(e){} }
+  setTimeout(function(){
+    Object.keys(charts).forEach(function(k){
+      try{ if(charts[k] && charts[k].resize) charts[k].resize(); }catch(e){}
+    });
+  }, 80);
+}
+function initSidebar(){
+  var collapsed = false;
+  try{ collapsed = localStorage.getItem('neonSidebarCollapsed') === '1'; }catch(e){}
+  if(!isMobile() && collapsed) document.body.classList.add('side-collapsed');
+}
+function initPages(){
+  setPage(currentPage(), true);
+  var btnMenu = document.getElementById('btnMenu');
+  if(btnMenu) btnMenu.addEventListener('click', function(){
+    if(isMobile()){
+      var open = !drawerOpen();
+      setDrawer(open);
+    } else {
+      document.body.classList.toggle('side-collapsed');
+      persistCollapsed(document.body.classList.contains('side-collapsed'));
+    }
+  });
+  var sideCollapse = document.getElementById('sideCollapse');
+  if(sideCollapse) sideCollapse.addEventListener('click', collapseSidebar);
+  var sideClose = document.getElementById('sideClose');
+  if(sideClose) sideClose.addEventListener('click', collapseSidebar);
+  var sideReopen = document.getElementById('sideReopen');
+  if(sideReopen) sideReopen.addEventListener('click', expandSidebar);
+  var sideBackdrop = document.getElementById('sideBackdrop');
+  if(sideBackdrop) sideBackdrop.addEventListener('click', function(){ setDrawer(false); });
+  Array.prototype.forEach.call(document.querySelectorAll('.side-btn'), function(b){
+    b.addEventListener('click', function(){
+      setPage(b.getAttribute('data-page'));
+      if(isMobile()) setDrawer(false);
+    });
+  });
+  document.addEventListener('keydown', function(ev){
+    if(ev.key === 'Escape' && drawerOpen()) setDrawer(false);
+  });
+  window.addEventListener('resize', function(){
+    if(!isMobile()){
+      setDrawer(false);
+    }
+  });
+}
+
+initPlanejamento();
+initSidebar();
+initPages();
 bootLock();
 
 })();
