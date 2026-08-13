@@ -2254,6 +2254,8 @@ function render(){
 
   var despCatMap = groupSum(main.filter(function(r){ return isDespesa(r.tipo); }), function(r){ return r.cat || 'Sem categoria'; });
   var despCatSorted = sortedEntries(despCatMap);
+  var formaMap = groupSum(main.filter(function(r){ return isDespesa(r.tipo); }), function(r){ return r.forma || 'Sem forma'; });
+  var formaSorted = sortedEntries(formaMap);
   document.getElementById('rankCategoria').innerHTML = despCatSorted.length
     ? despCatSorted.slice(0,4).map(function(e,i){
         var pct = totalDespesa ? (e[1]/totalDespesa*100).toFixed(0) : 0;
